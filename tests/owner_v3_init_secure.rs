@@ -17,19 +17,19 @@ extern crate clap;
 #[macro_use]
 extern crate log;
 
-extern crate grin_wallet;
+extern crate echo_wallet;
 
-use grin_wallet_api::{ECDHPubkey, JsonId};
-use grin_wallet_impls::test_framework::{self, LocalWalletClient, WalletProxy};
+use echo_wallet_api::{ECDHPubkey, JsonId};
+use echo_wallet_impls::test_framework::{self, LocalWalletClient, WalletProxy};
 
 use clap::App;
 use std::thread;
 use std::time::Duration;
 
+use echo_wallet_impls::DefaultLCProvider;
 use grin_keychain::ExtKeychain;
 use grin_util::secp::key::SecretKey;
 use grin_util::{from_hex, static_secp_instance};
-use grin_wallet_impls::DefaultLCProvider;
 use serde_json;
 
 #[macro_use]
@@ -40,7 +40,7 @@ use common::{
 };
 
 #[test]
-fn owner_v3_init_secure() -> Result<(), grin_wallet_controller::Error> {
+fn owner_v3_init_secure() -> Result<(), echo_wallet_controller::Error> {
 	setup_global_chain_type();
 
 	let test_dir = "target/test_output/owner_v3_init_secure";
@@ -55,9 +55,9 @@ fn owner_v3_init_secure() -> Result<(), grin_wallet_controller::Error> {
 		test_framework::award_blocks_to_wallet(&chain, wallet1.clone(), mask1, bh as usize, false);
 
 	// run a wallet owner listener
-	let arg_vec = vec!["grin-wallet", "-p", "password", "owner_api", "-l", "33420"];
+	let arg_vec = vec!["echo-wallet", "-p", "password", "owner_api", "-l", "33420"];
 	thread::spawn(move || {
-		let yml = load_yaml!("../src/bin/grin-wallet.yml");
+		let yml = load_yaml!("../src/bin/echo-wallet.yml");
 		let app = App::from_yaml(yml);
 		execute_command(&app, test_dir, "wallet1", &client1, arg_vec.clone()).unwrap();
 	});

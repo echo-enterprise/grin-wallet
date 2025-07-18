@@ -243,14 +243,14 @@ impl Default for EmissaryConfig {
 			caps: Some(String::from("XR")),
 			http_proxy: Some(HttpProxyConfig {
 				host: "127.0.0.1".to_string(),
-				port: 4444u16,
+				port: 4404u16,
 				outproxy: None,
 			}),
 			i2cp: Some(I2cpConfig {
-				port: 7654,
+				port: 7054,
 				host: None,
 			}),
-			metrics: Some(MetricsConfig { port: 7788 }),
+			metrics: Some(MetricsConfig { port: 7188 }),
 			ntcp2: Some(Ntcp2Config {
 				port: {
 					loop {
@@ -282,8 +282,8 @@ impl Default for EmissaryConfig {
 				port: None,
 			}),
 			sam: Some(SamConfig {
-				tcp_port: 7656,
-				udp_port: 7655,
+				tcp_port: 7056,
+				udp_port: 7055,
 				host: None,
 			}),
 			transit: Some(TransitConfig {
@@ -413,13 +413,13 @@ impl Config {
 	///
 	/// If the configuratin file exists but it's invalid, exit early, unless `--overwrite-config`
 	/// has been passed in which case create new default configuration.
-	pub fn parse(path: Option<PathBuf>, arguments: &Arguments) -> Result<Self, Error> {
+	pub fn parse(path: Option<PathBuf>, arguments: Option<&Arguments>) -> Result<Self, Error> {
 		let path = path
 			.map_or_else(
 				|| {
 					let mut path = home_dir()?;
 					(!path.as_os_str().is_empty()).then(|| {
-						path.push(".emissary");
+						path.push(".echo");
 						path
 					})
 				},
@@ -433,6 +433,8 @@ impl Config {
 			"parse router config",
 		);
 
+		let path = path.join("wallet_i2p_router");
+
 		// if base path doesn't exist, create it and return empty config
 		if !path.exists() {
 			fs::create_dir_all(&path)?;
@@ -440,6 +442,11 @@ impl Config {
 			Config::create_profiles_dir(path.join("peerProfiles"))?;
 
 			return Config::new_empty(path);
+		}
+
+		// create addressbook directory
+		if !path.join("addressbook").exists() {
+			fs::create_dir_all(path.join("addressbook"))?;
 		}
 
 		if !path.join("netDb").exists() {
@@ -511,7 +518,12 @@ impl Config {
 		// if the option hasn't been passed, exit early and allow user to take a copy of their
 		// config before generating a new config
 		let router_config = match Self::load_router_config(path.clone()) {
-			Err(Error::InvalidData) if arguments.overwrite_config.unwrap_or(false) => None,
+			Err(Error::InvalidData)
+				if arguments
+					.is_some_and(|arguments| arguments.overwrite_config.unwrap_or(false)) =>
+			{
+				None
+			}
 			Err(Error::InvalidData) => return Err(Error::InvalidData),
 			Err(_) => None,
 			Ok(config) => Some(config),
@@ -528,8 +540,8 @@ impl Config {
 			ssu2_intro_key,
 			router_config,
 			router_info,
-		)?
-		.merge(arguments);
+		)?;
+		// .merge(arguments);
 
 		config.routers = Self::load_router_infos(&path);
 		config.profiles = Self::load_router_profiles(&path);
@@ -1310,7 +1322,7 @@ mod tests {
 	#[test]
 	fn fresh_boot_directory_created() {
 		let dir = tempdir().unwrap();
-		let config = Config::parse(Some(dir.path().to_owned()), &make_arguments()).unwrap();
+		let config = Config::parse(Some(dir.path().to_owned()), Some(&make_arguments())).unwrap();
 
 		assert!(config.routers.is_empty());
 		assert_eq!(config.static_key.len(), 32);
@@ -1348,11 +1360,12 @@ mod tests {
 		let dir = tempdir().unwrap();
 
 		let (static_key, signing_key, ntcp2_config) = {
-			let config = Config::parse(Some(dir.path().to_owned()), &make_arguments()).unwrap();
+			let config =
+				Config::parse(Some(dir.path().to_owned()), Some(&make_arguments())).unwrap();
 			(config.static_key, config.signing_key, config.ntcp2_config)
 		};
 
-		let config = Config::parse(Some(dir.path().to_owned()), &make_arguments()).unwrap();
+		let config = Config::parse(Some(dir.path().to_owned()), Some(&make_arguments())).unwrap();
 		assert_eq!(config.static_key, static_key);
 		assert_eq!(config.signing_key, signing_key);
 		assert_eq!(
@@ -1379,7 +1392,8 @@ mod tests {
 
 		// create default config, verify the default ntcp2 port is 8888
 		let (ntcp2_key, ntcp2_iv) = {
-			let config = Config::parse(Some(dir.path().to_owned()), &make_arguments()).unwrap();
+			let config =
+				Config::parse(Some(dir.path().to_owned()), Some(&make_arguments())).unwrap();
 			let ntcp2_config = config.ntcp2_config.unwrap();
 
 			assert!(ntcp2_config.port >= 9151 && ntcp2_config.port <= 30777);
@@ -1408,7 +1422,7 @@ mod tests {
 		// load the new config
 		//
 		// verify that ntcp2 key & iv are the same but port is new
-		let config = Config::parse(Some(dir.path().to_owned()), &make_arguments()).unwrap();
+		let config = Config::parse(Some(dir.path().to_owned()), Some(&make_arguments())).unwrap();
 		let ntcp2_config = config.ntcp2_config.unwrap();
 
 		assert_eq!(ntcp2_config.port, 1337u16);
@@ -1426,7 +1440,7 @@ mod tests {
 		let mut args = make_arguments();
 
 		// create default config, verify the default ntcp2 port is 8888
-		match Config::parse(Some(dir.path().to_owned()), &args) {
+		match Config::parse(Some(dir.path().to_owned()), Some(&args)) {
 			Err(Error::InvalidData) => {}
 			_ => panic!("invalid result"),
 		}
@@ -1435,7 +1449,7 @@ mod tests {
 		args.overwrite_config = Some(true);
 
 		// verify default config is created
-		let config = Config::parse(Some(dir.path().to_owned()), &args).unwrap();
+		let config = Config::parse(Some(dir.path().to_owned()), Some(&args)).unwrap();
 
 		assert!(config.ntcp2_config.is_some());
 		assert!(config.sam_config.is_some());
@@ -1475,7 +1489,7 @@ mod tests {
 		let mut file = fs::File::create(dir.path().to_owned().join("router.toml")).unwrap();
 		file.write_all(config.as_bytes()).unwrap();
 
-		match Config::parse(Some(dir.path().to_owned()), &make_arguments()) {
+		match Config::parse(Some(dir.path().to_owned()), Some(&make_arguments())) {
 			Err(Error::InvalidData) => {}
 			_ => panic!("invalid result"),
 		}
@@ -1510,7 +1524,7 @@ mod tests {
 		let mut file = fs::File::create(dir.path().to_owned().join("router.toml")).unwrap();
 		file.write_all(config.as_bytes()).unwrap();
 
-		match Config::parse(Some(dir.path().to_owned()), &make_arguments()) {
+		match Config::parse(Some(dir.path().to_owned()), Some(&make_arguments())) {
 			Err(Error::InvalidData) => {}
 			_ => panic!("invalid result"),
 		}

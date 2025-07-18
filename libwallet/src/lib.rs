@@ -22,13 +22,13 @@
 #![deny(unused_mut)]
 #![warn(missing_docs)]
 
-use grin_wallet_config as config;
+use echo_wallet_config as config;
 
 use grin_core;
 use grin_keychain;
 use grin_util;
 
-use grin_wallet_util as util;
+use echo_wallet_util as util;
 
 use blake2_rfc as blake2;
 

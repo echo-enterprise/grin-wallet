@@ -14,9 +14,9 @@
 //! Tests and experimentations with late locking
 #[macro_use]
 extern crate log;
-extern crate grin_wallet_controller as wallet;
-extern crate grin_wallet_impls as impls;
-extern crate grin_wallet_libwallet as libwallet;
+extern crate echo_wallet_controller as wallet;
+extern crate echo_wallet_impls as impls;
+extern crate echo_wallet_libwallet as libwallet;
 
 use self::libwallet::{InitTxArgs, Slate};
 use impls::test_framework::{self, LocalWalletClient};

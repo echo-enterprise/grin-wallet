@@ -1956,6 +1956,210 @@ dependencies = [
 ]
 
 [[package]]
+name = "echo_wallet"
+version = "5.4.0-alpha.1"
+dependencies = [
+ "anyhow",
+ "built",
+ "clap 2.34.0",
+ "easy-jsonrpc-mw",
+ "echo_wallet_api",
+ "echo_wallet_config",
+ "echo_wallet_controller",
+ "echo_wallet_impls",
+ "echo_wallet_libwallet",
+ "echo_wallet_util",
+ "grin_api",
+ "grin_core",
+ "grin_keychain",
+ "grin_util",
+ "i2p_router",
+ "lazy_static",
+ "linefeed",
+ "log",
+ "prettytable-rs",
+ "remove_dir_all",
+ "rpassword",
+ "rustyline",
+ "semver 0.10.0",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "thiserror 1.0.66",
+ "tokio 1.46.1",
+ "url",
+ "yosemite",
+]
+
+[[package]]
+name = "echo_wallet_api"
+version = "5.4.0-alpha.1"
+dependencies = [
+ "base64 0.12.3",
+ "chrono",
+ "easy-jsonrpc-mw",
+ "echo_wallet_config",
+ "echo_wallet_impls",
+ "echo_wallet_libwallet",
+ "echo_wallet_util",
+ "ed25519-dalek 1.0.1",
+ "grin_core",
+ "grin_keychain",
+ "grin_util",
+ "log",
+ "rand 0.6.5",
+ "ring",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "tempfile",
+ "uuid",
+]
+
+[[package]]
+name = "echo_wallet_config"
+version = "5.4.0-alpha.1"
+dependencies = [
+ "dirs 2.0.2",
+ "echo_wallet_util",
+ "grin_core",
+ "grin_util",
+ "pretty_assertions",
+ "rand 0.6.5",
+ "serde",
+ "serde_derive",
+ "toml 0.5.11",
+]
+
+[[package]]
+name = "echo_wallet_controller"
+version = "5.4.0-alpha.1"
+dependencies = [
+ "chrono",
+ "easy-jsonrpc-mw",
+ "echo_wallet_api",
+ "echo_wallet_config",
+ "echo_wallet_impls",
+ "echo_wallet_libwallet",
+ "echo_wallet_util",
+ "ed25519-dalek 1.0.1",
+ "futures 0.3.31",
+ "grin_api",
+ "grin_chain",
+ "grin_core",
+ "grin_keychain",
+ "grin_util",
+ "hyper 0.13.10",
+ "lazy_static",
+ "log",
+ "prettytable-rs",
+ "qr_code",
+ "rand 0.7.3",
+ "remove_dir_all",
+ "ring",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "term 0.6.1",
+ "thiserror 1.0.66",
+ "tokio 0.2.25",
+ "url",
+ "uuid",
+]
+
+[[package]]
+name = "echo_wallet_impls"
+version = "5.4.0-alpha.1"
+dependencies = [
+ "base64 0.12.3",
+ "blake2-rfc",
+ "byteorder",
+ "chrono",
+ "data-encoding",
+ "echo_wallet_config",
+ "echo_wallet_libwallet",
+ "echo_wallet_util",
+ "ed25519-dalek 1.0.1",
+ "futures 0.3.31",
+ "grin_api",
+ "grin_chain",
+ "grin_core",
+ "grin_keychain",
+ "grin_store",
+ "grin_util",
+ "lazy_static",
+ "log",
+ "rand 0.6.5",
+ "regex",
+ "remove_dir_all",
+ "reqwest 0.10.10",
+ "ring",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "sysinfo",
+ "thiserror 1.0.66",
+ "timer",
+ "tokio 0.2.25",
+ "url",
+ "uuid",
+ "x25519-dalek 0.6.0",
+]
+
+[[package]]
+name = "echo_wallet_libwallet"
+version = "5.4.0-alpha.1"
+dependencies = [
+ "age",
+ "base64 0.9.3",
+ "bech32 0.7.3",
+ "blake2-rfc",
+ "bs58",
+ "byteorder",
+ "chacha20 0.8.2",
+ "chrono",
+ "curve25519-dalek 2.1.3",
+ "echo_wallet_config",
+ "echo_wallet_util",
+ "ed25519-dalek 1.0.1",
+ "grin_core",
+ "grin_keychain",
+ "grin_store",
+ "grin_util",
+ "hmac 0.12.1",
+ "lazy_static",
+ "log",
+ "num-bigint 0.2.6",
+ "rand 0.6.5",
+ "regex",
+ "secrecy 0.6.0",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "sha2 0.10.9",
+ "strum",
+ "strum_macros",
+ "thiserror 1.0.66",
+ "uuid",
+ "x25519-dalek 0.6.0",
+]
+
+[[package]]
+name = "echo_wallet_util"
+version = "5.4.0-alpha.1"
+dependencies = [
+ "data-encoding",
+ "ed25519-dalek 1.0.1",
+ "grin_util",
+ "pretty_assertions",
+ "rand 0.6.5",
+ "serde",
+ "serde_derive",
+ "sha3",
+ "thiserror 1.0.66",
+]
+
+[[package]]
 name = "ed25519"
 version = "1.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2937,210 +3141,6 @@ dependencies = [
  "walkdir",
  "zeroize",
  "zip 0.5.13",
-]
-
-[[package]]
-name = "grin_wallet"
-version = "5.4.0-alpha.1"
-dependencies = [
- "anyhow",
- "built",
- "clap 2.34.0",
- "easy-jsonrpc-mw",
- "grin_api",
- "grin_core",
- "grin_keychain",
- "grin_util",
- "grin_wallet_api",
- "grin_wallet_config",
- "grin_wallet_controller",
- "grin_wallet_impls",
- "grin_wallet_libwallet",
- "grin_wallet_util",
- "i2p_router",
- "lazy_static",
- "linefeed",
- "log",
- "prettytable-rs",
- "remove_dir_all",
- "rpassword",
- "rustyline",
- "semver 0.10.0",
- "serde",
- "serde_derive",
- "serde_json",
- "thiserror 1.0.66",
- "tokio 1.46.1",
- "url",
- "yosemite",
-]
-
-[[package]]
-name = "grin_wallet_api"
-version = "5.4.0-alpha.1"
-dependencies = [
- "base64 0.12.3",
- "chrono",
- "easy-jsonrpc-mw",
- "ed25519-dalek 1.0.1",
- "grin_core",
- "grin_keychain",
- "grin_util",
- "grin_wallet_config",
- "grin_wallet_impls",
- "grin_wallet_libwallet",
- "grin_wallet_util",
- "log",
- "rand 0.6.5",
- "ring",
- "serde",
- "serde_derive",
- "serde_json",
- "tempfile",
- "uuid",
-]
-
-[[package]]
-name = "grin_wallet_config"
-version = "5.4.0-alpha.1"
-dependencies = [
- "dirs 2.0.2",
- "grin_core",
- "grin_util",
- "grin_wallet_util",
- "pretty_assertions",
- "rand 0.6.5",
- "serde",
- "serde_derive",
- "toml 0.5.11",
-]
-
-[[package]]
-name = "grin_wallet_controller"
-version = "5.4.0-alpha.1"
-dependencies = [
- "chrono",
- "easy-jsonrpc-mw",
- "ed25519-dalek 1.0.1",
- "futures 0.3.31",
- "grin_api",
- "grin_chain",
- "grin_core",
- "grin_keychain",
- "grin_util",
- "grin_wallet_api",
- "grin_wallet_config",
- "grin_wallet_impls",
- "grin_wallet_libwallet",
- "grin_wallet_util",
- "hyper 0.13.10",
- "lazy_static",
- "log",
- "prettytable-rs",
- "qr_code",
- "rand 0.7.3",
- "remove_dir_all",
- "ring",
- "serde",
- "serde_derive",
- "serde_json",
- "term 0.6.1",
- "thiserror 1.0.66",
- "tokio 0.2.25",
- "url",
- "uuid",
-]
-
-[[package]]
-name = "grin_wallet_impls"
-version = "5.4.0-alpha.1"
-dependencies = [
- "base64 0.12.3",
- "blake2-rfc",
- "byteorder",
- "chrono",
- "data-encoding",
- "ed25519-dalek 1.0.1",
- "futures 0.3.31",
- "grin_api",
- "grin_chain",
- "grin_core",
- "grin_keychain",
- "grin_store",
- "grin_util",
- "grin_wallet_config",
- "grin_wallet_libwallet",
- "grin_wallet_util",
- "lazy_static",
- "log",
- "rand 0.6.5",
- "regex",
- "remove_dir_all",
- "reqwest 0.10.10",
- "ring",
- "serde",
- "serde_derive",
- "serde_json",
- "sysinfo",
- "thiserror 1.0.66",
- "timer",
- "tokio 0.2.25",
- "url",
- "uuid",
- "x25519-dalek 0.6.0",
-]
-
-[[package]]
-name = "grin_wallet_libwallet"
-version = "5.4.0-alpha.1"
-dependencies = [
- "age",
- "base64 0.9.3",
- "bech32 0.7.3",
- "blake2-rfc",
- "bs58",
- "byteorder",
- "chacha20 0.8.2",
- "chrono",
- "curve25519-dalek 2.1.3",
- "ed25519-dalek 1.0.1",
- "grin_core",
- "grin_keychain",
- "grin_store",
- "grin_util",
- "grin_wallet_config",
- "grin_wallet_util",
- "hmac 0.12.1",
- "lazy_static",
- "log",
- "num-bigint 0.2.6",
- "rand 0.6.5",
- "regex",
- "secrecy 0.6.0",
- "serde",
- "serde_derive",
- "serde_json",
- "sha2 0.10.9",
- "strum",
- "strum_macros",
- "thiserror 1.0.66",
- "uuid",
- "x25519-dalek 0.6.0",
-]
-
-[[package]]
-name = "grin_wallet_util"
-version = "5.4.0-alpha.1"
-dependencies = [
- "data-encoding",
- "ed25519-dalek 1.0.1",
- "grin_util",
- "pretty_assertions",
- "rand 0.6.5",
- "serde",
- "serde_derive",
- "sha3",
- "thiserror 1.0.66",
 ]
 
 [[package]]

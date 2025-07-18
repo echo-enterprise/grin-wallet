@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::cmd::i2p_starter::start_i2p_router;
 use crate::cmd::wallet_args;
 use crate::util::secp::key::SecretKey;
 use crate::util::Mutex;
+use anyhow::Error as AnyhowError;
 use clap::App;
 //use colored::Colorize;
+use echo_wallet_api::Owner;
+use echo_wallet_config::{TorConfig, WalletConfig};
+use echo_wallet_controller::command::GlobalArgs;
+use echo_wallet_controller::Error;
+use echo_wallet_impls::DefaultWalletImpl;
+use echo_wallet_libwallet::{NodeClient, StatusMessage, WalletInst, WalletLCProvider};
 use grin_keychain as keychain;
-use grin_wallet_api::Owner;
-use grin_wallet_config::{TorConfig, WalletConfig};
-use grin_wallet_controller::command::GlobalArgs;
-use grin_wallet_controller::Error;
-use grin_wallet_impls::DefaultWalletImpl;
-use grin_wallet_libwallet::{NodeClient, StatusMessage, WalletInst, WalletLCProvider};
 use rustyline::completion::{Completer, FilenameCompleter, Pair};
 use rustyline::error::ReadlineError;
 use rustyline::highlight::{Highlighter, MatchingBracketHighlighter};
@@ -31,13 +33,16 @@ use rustyline::hint::Hinter;
 use rustyline::validate::Validator;
 use rustyline::{CompletionType, Config, Context, EditMode, Editor, Helper, OutputStreamType};
 use std::borrow::Cow::{self, Borrowed, Owned};
+use std::process::exit;
 use std::sync::mpsc::{channel, Receiver};
 use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
 
-const COLORED_PROMPT: &'static str = "\x1b[36mgrin-wallet>\x1b[0m ";
-const PROMPT: &'static str = "grin-wallet> ";
+use tokio::sync::mpsc::channel as tokio_channel;
+
+const COLORED_PROMPT: &'static str = "\x1b[36mecho-wallet>\x1b[0m ";
+const PROMPT: &'static str = "echo-wallet> ";
 //const HISTORY_PATH: &str = ".history";
 
 // static for keeping track of current stdin buffer contents
@@ -120,6 +125,23 @@ where
 	C: NodeClient + 'static,
 	K: keychain::Keychain + 'static,
 {
+	// Start I2P router
+	let (i2p_shutdown_tx, i2p_shutdown_rx) = tokio_channel::<()>(1);
+	let (i2p_started_tx, mut i2p_started_rx) = tokio_channel::<()>(1);
+
+	let res = start_i2p_router(i2p_shutdown_tx.clone(), i2p_shutdown_rx, i2p_started_tx);
+	if let Err(e) = res {
+		println!("Error at starting i2p router {}", e);
+		exit(0);
+	}
+
+	// Wait for I2P router to start
+	while let Ok(()) = i2p_started_rx.try_recv() {
+		// I2P router has started, break out of the wait loop
+		break;
+	}
+
+	//
 	let editor = Config::builder()
 		.history_ignore_space(true)
 		.completion_type(CompletionType::List)
@@ -145,7 +167,7 @@ where
 		let _ = reader.load_history(&history_file);
 	}*/
 
-	let yml = load_yaml!("../bin/grin-wallet.yml");
+	let yml = load_yaml!("../bin/echo-wallet.yml");
 	let mut app = App::from_yaml(yml).version(crate_version!());
 	let mut keychain_mask = keychain_mask;
 
@@ -165,6 +187,7 @@ where
 				}
 				// TODO tidy up a bit
 				if command.to_lowercase() == "exit" {
+					i2p_shutdown_tx.try_send(());
 					break;
 				}
 				/* use crate::common::{is_cli, COLORED_PROMPT}; */
@@ -175,9 +198,9 @@ where
 					*contents = String::from("");
 				}
 
-				// Just add 'grin-wallet' to each command behind the scenes
+				// Just add 'echo-wallet' to each command behind the scenes
 				// so we don't need to maintain a separate definition file
-				let augmented_command = format!("grin-wallet {}", command);
+				let augmented_command = format!("echo-wallet {}", command);
 				let args =
 					app.get_matches_from_safe_borrow(augmented_command.trim().split_whitespace());
 				let done = match args {

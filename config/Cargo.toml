@@ -1,10 +1,10 @@
 [package]
-name = "grin_wallet_config"
+name = "echo_wallet_config"
 version = "5.4.0-alpha.1"
 authors = ["Grin Developers <mimblewimble@lists.launchpad.net>"]
 description = "Configuration for grin wallet , a simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
-repository = "https://github.com/mimblewimble/grin-wallet"
+repository = "https://github.com/mimblewimble/echo-wallet"
 keywords = [ "crypto", "grin", "mimblewimble" ]
 workspace = ".."
 edition = "2018"
@@ -16,7 +16,7 @@ serde_derive = "1"
 toml = "0.5"
 dirs = "2.0"
 
-grin_wallet_util = { path = "../util", version = "5.4.0-alpha.1" }
+echo_wallet_util = { path = "../util", version = "5.4.0-alpha.1" }
 
 ##### Grin Imports
 

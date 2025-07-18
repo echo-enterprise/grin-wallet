@@ -17,16 +17,16 @@ extern crate clap;
 #[macro_use]
 extern crate log;
 
-extern crate grin_wallet;
+extern crate echo_wallet;
 
-use grin_wallet_impls::test_framework::{self, LocalWalletClient, WalletProxy};
+use echo_wallet_impls::test_framework::{self, LocalWalletClient, WalletProxy};
 
 use clap::App;
 use std::thread;
 use std::time::Duration;
 
+use echo_wallet_impls::DefaultLCProvider;
 use grin_keychain::ExtKeychain;
-use grin_wallet_impls::DefaultLCProvider;
 
 use grin_util as util;
 
@@ -44,9 +44,9 @@ fn setup_no_clean() {
 
 #[ignore]
 #[test]
-fn socks_tor() -> Result<(), grin_wallet_controller::Error> {
+fn socks_tor() -> Result<(), echo_wallet_controller::Error> {
 	let test_dir = "target/test_output/socks_tor";
-	let yml = load_yaml!("../src/bin/grin-wallet.yml");
+	let yml = load_yaml!("../src/bin/echo-wallet.yml");
 	let app = App::from_yaml(yml);
 	setup_no_clean();
 
@@ -66,10 +66,10 @@ fn socks_tor() -> Result<(), grin_wallet_controller::Error> {
 	let onion_address = "2a6at2obto3uvkpkitqp4wxcg6u36qf534eucbskqciturczzc5suyid";
 
 	// run the foreign listener for wallet 2
-	let arg_vec = vec!["grin-wallet", "-p", "password", "listen"];
+	let arg_vec = vec!["echo-wallet", "-p", "password", "listen"];
 	// Set owner listener running
 	thread::spawn(move || {
-		let yml = load_yaml!("../src/bin/grin-wallet.yml");
+		let yml = load_yaml!("../src/bin/echo-wallet.yml");
 		let app = App::from_yaml(yml);
 		execute_command(&app, test_dir, "wallet2", &client2, arg_vec.clone()).unwrap();
 	});
@@ -84,7 +84,7 @@ fn socks_tor() -> Result<(), grin_wallet_controller::Error> {
 
 	// now, test send from wallet 1 over tor
 	let arg_vec = vec![
-		"grin-wallet",
+		"echo-wallet",
 		"-p",
 		"password",
 		"send",

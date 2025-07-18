@@ -1,10 +1,10 @@
 [package]
-name = "grin_wallet"
+name = "echo_wallet"
 version = "5.4.0-alpha.1"
 authors = ["Grin Developers <mimblewimble@lists.launchpad.net>"]
 description = "Simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
-repository = "https://github.com/mimblewimble/grin-wallet"
+repository = "https://github.com/echo-enterprise/echo-wallet"
 keywords = [ "crypto", "grin", "mimblewimble" ]
 readme = "README.md"
 exclude = ["**/*.grin", "**/*.grin2"]
@@ -12,11 +12,11 @@ build = "src/build/build.rs"
 edition = "2018"
 
 [[bin]]
-name = "grin-wallet"
-path = "src/bin/grin-wallet.rs"
+name = "echo-wallet"
+path = "src/bin/echo-wallet.rs"
 
 [workspace]
-members = ["api", "config", "controller", "impls", "libwallet", "util"]
+members = ["api", "config", "controller", "impls", "libwallet", "util", "i2p_router"]
 exclude = ["integration"]
 
 [dependencies]
@@ -34,12 +34,12 @@ tokio.workspace = true
 anyhow.workspace = true
 yosemite.workspace = true
 
-grin_wallet_api = { path = "./api", version = "5.4.0-alpha.1" }
-grin_wallet_impls = { path = "./impls", version = "5.4.0-alpha.1" }
-grin_wallet_libwallet = { path = "./libwallet", version = "5.4.0-alpha.1" }
-grin_wallet_controller = { path = "./controller", version = "5.4.0-alpha.1" }
-grin_wallet_config = { path = "./config", version = "5.4.0-alpha.1" }
-grin_wallet_util = { path = "./util", version = "5.4.0-alpha.1" }
+echo_wallet_api = { path = "./api", version = "5.4.0-alpha.1" }
+echo_wallet_impls = { path = "./impls", version = "5.4.0-alpha.1" }
+echo_wallet_libwallet = { path = "./libwallet", version = "5.4.0-alpha.1" }
+echo_wallet_controller = { path = "./controller", version = "5.4.0-alpha.1" }
+echo_wallet_config = { path = "./config", version = "5.4.0-alpha.1" }
+echo_wallet_util = { path = "./util", version = "5.4.0-alpha.1" }
 i2p_router = { path="./i2p_router" }
 
 

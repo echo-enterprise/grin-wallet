@@ -34,8 +34,11 @@ use anyhow::anyhow;
 use clap::Parser;
 use emissary_core::{events::EventSubscriber, router::Router};
 use emissary_util::{reseeder::Reseeder, runtime::tokio::Runtime, su3::ReseedRouterInfo};
-use futures::{channel::oneshot, StreamExt};
-use tokio::sync::mpsc::{channel, Receiver};
+use futures::{
+	channel::{mpsc::Sender, oneshot},
+	StreamExt,
+};
+use tokio::sync::mpsc::{channel, Receiver, Sender as TokioSender};
 
 use std::{fs::File, io::Write, mem, sync::Arc};
 
@@ -79,15 +82,13 @@ pub struct RouterContext {
 }
 
 /// Setup router and related subsystems.
-pub async fn setup_router() -> anyhow::Result<RouterContext> {
-	println!("setup_router_1");
-	let arguments = Arguments::parse();
-	println!("setup_router_2");
+pub async fn setup_router(i2p_started_tx: TokioSender<()>) -> anyhow::Result<RouterContext> {
+	// let arguments = Arguments::parse();
 	// initialize logger with any logging directive given as a cli argument
-	let handle = init_logger!(arguments.log.clone());
+	let handle = init_logger!(None);
 
 	// parse router config and merge it with cli options
-	let mut config = Config::parse(arguments.base_path.clone(), &arguments).map_err(|error| {
+	let mut config = Config::parse(None, None).map_err(|error| {
 		tracing::warn!(
 			target: LOG_TARGET,
 			?error,
@@ -106,14 +107,14 @@ pub async fn setup_router() -> anyhow::Result<RouterContext> {
 		|ReseedConfig {
 		     reseed_threshold, ..
 		 }| reseed_threshold > &config.routers.len(),
-	) || arguments.reseed.force_reseed.unwrap_or(false);
+	) || false; //arguments.reseed.force_reseed.unwrap_or(false);
 
 	if should_reseed {
 		tracing::info!(
 			target: LOG_TARGET,
 			num_routers = ?config.routers.len(),
-			forced_reseed = ?arguments.reseed.force_reseed.unwrap_or(false),
-			force_ipv4 = ?(!arguments.reseed.disable_force_ipv4.unwrap_or(false)),
+			forced_reseed = ?false, //arguments.reseed.force_reseed.unwrap_or(false),
+			force_ipv4 = ?(!false), //arguments.reseed.disable_force_ipv4.unwrap_or(false)),
 			"reseed router"
 		);
 
@@ -122,7 +123,7 @@ pub async fn setup_router() -> anyhow::Result<RouterContext> {
 				.reseed
 				.as_ref()
 				.and_then(|config| config.hosts.clone()),
-			!arguments.reseed.disable_force_ipv4.unwrap_or(false),
+			!false, //arguments.reseed.disable_force_ipv4.unwrap_or(false),
 		)
 		.await
 		{
@@ -246,6 +247,7 @@ pub async fn setup_router() -> anyhow::Result<RouterContext> {
 				.await
 				{
 					Ok(proxy) => {
+						let _ = i2p_started_tx.try_send(());
 						if let Err(error) = proxy.run().await {
 							tracing::debug!(
 								target: LOG_TARGET,

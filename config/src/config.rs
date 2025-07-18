@@ -1,4 +1,4 @@
-// Copyright 2021 The Grin Developers
+// Copyright 2021 The Echo Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,38 +33,38 @@ use crate::types::{TorConfig, WalletConfig};
 use crate::util::logger::LoggingConfig;
 
 /// Wallet configuration file name
-pub const WALLET_CONFIG_FILE_NAME: &str = "grin-wallet.toml";
-const WALLET_LOG_FILE_NAME: &str = "grin-wallet.log";
-const GRIN_HOME: &str = ".grin";
+pub const WALLET_CONFIG_FILE_NAME: &str = "echo-wallet.toml";
+const WALLET_LOG_FILE_NAME: &str = "echo-wallet.log";
+const ECHO_HOME: &str = ".echo";
 /// Wallet data directory
-pub const GRIN_WALLET_DIR: &str = "wallet_data";
+pub const ECHO_WALLET_DIR: &str = "wallet_data";
 /// Node API secret
 pub const API_SECRET_FILE_NAME: &str = ".foreign_api_secret";
 /// Owner API secret
 pub const OWNER_API_SECRET_FILE_NAME: &str = ".owner_api_secret";
 
-fn get_grin_path(
+fn get_echo_path(
 	chain_type: &global::ChainTypes,
 	create_path: bool,
 ) -> Result<PathBuf, ConfigError> {
-	// Check if grin dir exists
-	let mut grin_path = match dirs::home_dir() {
+	// Check if echo dir exists
+	let mut echo_path = match dirs::home_dir() {
 		Some(p) => p,
 		None => PathBuf::new(),
 	};
-	grin_path.push(GRIN_HOME);
-	grin_path.push(chain_type.shortname());
+	echo_path.push(ECHO_HOME);
+	echo_path.push(chain_type.shortname());
 	// Create if the default path doesn't exist
-	if !grin_path.exists() && create_path {
-		fs::create_dir_all(grin_path.clone())?;
+	if !echo_path.exists() && create_path {
+		fs::create_dir_all(echo_path.clone())?;
 	}
 
-	if !grin_path.exists() {
+	if !echo_path.exists() {
 		Err(ConfigError::PathNotFoundError(String::from(
-			grin_path.to_str().unwrap(),
+			echo_path.to_str().unwrap(),
 		)))
 	} else {
-		Ok(grin_path)
+		Ok(echo_path)
 	}
 }
 
@@ -120,11 +120,11 @@ fn check_api_secret_file(
 	data_path: Option<PathBuf>,
 	file_name: &str,
 ) -> Result<(), ConfigError> {
-	let grin_path = match data_path {
+	let echo_path = match data_path {
 		Some(p) => p,
-		None => get_grin_path(chain_type, false)?,
+		None => get_echo_path(chain_type, false)?,
 	};
-	let mut api_secret_path = grin_path;
+	let mut api_secret_path = echo_path;
 	api_secret_path.push(file_name);
 	if !api_secret_path.exists() {
 		init_api_secret(&api_secret_path)
@@ -144,20 +144,20 @@ pub fn initial_setup_wallet(
 			fs::create_dir_all(p)?;
 		}
 	}
-	// Use config file if current directory if it exists, .grin home otherwise
+	// Use config file if current directory if it exists, .echo home otherwise
 	let (path, config) = if let Some(p) = check_config_current_dir(WALLET_CONFIG_FILE_NAME) {
 		let mut path = p.clone();
 		path.pop();
 		(path, GlobalWalletConfig::new(p.to_str().unwrap())?)
 	} else {
-		// Check if grin dir exists
-		let grin_path = match data_path {
+		// Check if echo dir exists
+		let echo_path = match data_path {
 			Some(p) => p,
-			None => get_grin_path(chain_type, create_path)?,
+			None => get_echo_path(chain_type, create_path)?,
 		};
 
 		// Get path to default config file
-		let mut config_path = grin_path.clone();
+		let mut config_path = echo_path.clone();
 		config_path.push(WALLET_CONFIG_FILE_NAME);
 
 		// Return defaults if file doesn't exist
@@ -166,8 +166,8 @@ pub fn initial_setup_wallet(
 				let mut default_config = GlobalWalletConfig::for_chain(chain_type);
 				default_config.config_file_path = Some(config_path);
 				// update paths relative to current dir
-				default_config.update_paths(&grin_path);
-				(grin_path, default_config)
+				default_config.update_paths(&echo_path);
+				(echo_path, default_config)
 			}
 			true => {
 				let mut path = config_path.clone();
@@ -270,7 +270,7 @@ impl GlobalWalletConfig {
 	/// Update paths
 	pub fn update_paths(&mut self, wallet_home: &PathBuf) {
 		let mut wallet_path = wallet_home.clone();
-		wallet_path.push(GRIN_WALLET_DIR);
+		wallet_path.push(ECHO_WALLET_DIR);
 		self.members.as_mut().unwrap().wallet.data_file_dir =
 			wallet_path.to_str().unwrap().to_owned();
 		let mut secret_path = wallet_home.clone();

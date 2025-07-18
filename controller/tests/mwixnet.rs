@@ -14,14 +14,14 @@
 //! Test a wallet sending to self, then creation of comsig request
 #[macro_use]
 extern crate log;
-extern crate grin_wallet_controller as wallet;
-extern crate grin_wallet_impls as impls;
+extern crate echo_wallet_controller as wallet;
+extern crate echo_wallet_impls as impls;
 
 use grin_core as core;
 use grin_util as util;
 use grin_util::secp::key::SecretKey;
 
-use grin_wallet_libwallet as libwallet;
+use echo_wallet_libwallet as libwallet;
 use impls::test_framework::{self, LocalWalletClient};
 use libwallet::{mwixnet::MixnetReqCreationParams, InitTxArgs};
 use std::sync::atomic::Ordering;

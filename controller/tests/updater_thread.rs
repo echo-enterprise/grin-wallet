@@ -14,13 +14,13 @@
 //! Test a wallet repost command
 #[macro_use]
 extern crate log;
-extern crate grin_wallet_api as api;
-extern crate grin_wallet_controller as wallet;
-extern crate grin_wallet_impls as impls;
-extern crate grin_wallet_libwallet as libwallet;
+extern crate echo_wallet_api as api;
+extern crate echo_wallet_controller as wallet;
+extern crate echo_wallet_impls as impls;
+extern crate echo_wallet_libwallet as libwallet;
 
 // use crate::libwallet::api_impl::owner_updater::{start_updater_log_thread, StatusMessage};
-// use grin_wallet_util::grin_core as core;
+// use echo_wallet_util::grin_core as core;
 
 use impls::test_framework::{self, LocalWalletClient};
 use std::sync::atomic::Ordering;

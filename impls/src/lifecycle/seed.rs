@@ -141,7 +141,7 @@ impl WalletSeed {
 		if !Path::new(&data_file_dir).exists() {
 			return Err(Error::WalletDoesntExist(
 				data_file_dir.to_owned(),
-				"To create a new wallet from a recovery phrase, use 'grin-wallet init -r'"
+				"To create a new wallet from a recovery phrase, use 'echo-wallet init -r'"
 					.to_owned(),
 			)
 			.into());
@@ -210,8 +210,8 @@ impl WalletSeed {
 			Ok(wallet_seed)
 		} else {
 			error!(
-				"wallet seed file {} could not be opened (grin-wallet init). \
-				 Run \"grin-wallet init\" to initialize a new wallet.",
+				"wallet seed file {} could not be opened (echo-wallet init). \
+				 Run \"echo-wallet init\" to initialize a new wallet.",
 				seed_file_path
 			);
 			Err(Error::WalletSeedDoesntExist)

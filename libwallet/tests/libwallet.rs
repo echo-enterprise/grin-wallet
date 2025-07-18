@@ -12,6 +12,7 @@
 // limitations under the License.
 
 //! core::libtx specific tests
+use echo_wallet_libwallet::Context;
 use grin_core::core::transaction;
 use grin_core::core::FeeFields;
 use grin_core::libtx::{aggsig, proof};
@@ -20,7 +21,6 @@ use grin_keychain::{
 };
 use grin_util::secp;
 use grin_util::secp::key::{PublicKey, SecretKey};
-use grin_wallet_libwallet::Context;
 use rand::thread_rng;
 
 fn kernel_sig_msg() -> secp::Message {

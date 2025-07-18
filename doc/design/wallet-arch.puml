@@ -1,4 +1,4 @@
-@startuml grin-wallet-overview 
+@startuml echo-wallet-overview 
 skinparam componentStyle uml2
 
 [Grin Node] as grin_node

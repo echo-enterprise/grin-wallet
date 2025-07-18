@@ -14,15 +14,15 @@
 //! tests differing accounts in the same wallet
 #[macro_use]
 extern crate log;
-extern crate grin_wallet_controller as wallet;
-extern crate grin_wallet_impls as impls;
+extern crate echo_wallet_controller as wallet;
+extern crate echo_wallet_impls as impls;
 
 use grin_core as core;
 use grin_keychain as keychain;
 
 use self::core::global;
 use self::keychain::{ExtKeychain, Keychain};
-use grin_wallet_libwallet as libwallet;
+use echo_wallet_libwallet as libwallet;
 use impls::test_framework::{self, LocalWalletClient};
 use libwallet::InitTxArgs;
 use std::sync::atomic::Ordering;

@@ -14,21 +14,21 @@
 
 use crate::api::TLSConfig;
 use crate::cli::command_loop;
-use crate::config::GRIN_WALLET_DIR;
+use crate::config::ECHO_WALLET_DIR;
 use crate::util::file::get_first_line;
 use crate::util::secp::key::SecretKey;
 use crate::util::{Mutex, ZeroingString};
 /// Argument parsing and error handling for wallet commands
 use clap::ArgMatches;
+use echo_wallet_api::Owner;
+use echo_wallet_config::{config_file_exists, TorConfig, WalletConfig};
+use echo_wallet_controller::{command, Error};
+use echo_wallet_impls::{DefaultLCProvider, DefaultWalletImpl};
+use echo_wallet_libwallet::{self, Slate, SlatepackAddress, SlatepackArmor};
+use echo_wallet_libwallet::{IssueInvoiceTxArgs, NodeClient, WalletInst, WalletLCProvider};
 use grin_core as core;
 use grin_core::core::amount_to_hr_string;
 use grin_keychain as keychain;
-use grin_wallet_api::Owner;
-use grin_wallet_config::{config_file_exists, TorConfig, WalletConfig};
-use grin_wallet_controller::{command, Error};
-use grin_wallet_impls::{DefaultLCProvider, DefaultWalletImpl};
-use grin_wallet_libwallet::{self, Slate, SlatepackAddress, SlatepackArmor};
-use grin_wallet_libwallet::{IssueInvoiceTxArgs, NodeClient, WalletInst, WalletLCProvider};
 use linefeed::terminal::Signal;
 use linefeed::{Interface, ReadResult};
 use rpassword;
@@ -1003,11 +1003,11 @@ where
 	node_client.set_node_url(&wallet_config.check_node_api_http_addr);
 	node_client.set_node_api_secret(global_wallet_args.node_api_secret.clone());
 
-	// legacy hack to avoid the need for changes in existing grin-wallet.toml files
+	// legacy hack to avoid the need for changes in existing echo-wallet.toml files
 	// remove `wallet_data` from end of path as
-	// new lifecycle provider assumes grin_wallet.toml is in root of data directory
+	// new lifecycle provider assumes echo_wallet.toml is in root of data directory
 	let mut top_level_wallet_dir = PathBuf::from(wallet_config.clone().data_file_dir);
-	if top_level_wallet_dir.ends_with(GRIN_WALLET_DIR) {
+	if top_level_wallet_dir.ends_with(ECHO_WALLET_DIR) {
 		top_level_wallet_dir.pop();
 		wallet_config.data_file_dir = top_level_wallet_dir.to_str().unwrap().into();
 	}
@@ -1074,16 +1074,25 @@ where
 		false => None,
 	};
 
+	// let res = command_loop(
+	// 	wallet,
+	// 	keychain_mask,
+	// 	&wallet_config,
+	// 	&tor_config,
+	// 	&global_wallet_args,
+	// 	test_mode,
+	// );
+
 	let res = match wallet_args.subcommand() {
-		("cli", Some(_)) => command_loop(
-			wallet,
-			keychain_mask,
-			&wallet_config,
-			&tor_config,
-			&global_wallet_args,
-			test_mode,
-		),
-		_ => {
+		// ("cli", Some(_)) => command_loop(
+		// 	wallet,
+		// 	keychain_mask,
+		// 	&wallet_config,
+		// 	&tor_config,
+		// 	&global_wallet_args,
+		// 	test_mode,
+		// ),
+		("init", Some(_)) => {
 			let mut owner_api = Owner::new(wallet, None);
 			parse_and_execute(
 				&mut owner_api,
@@ -1096,6 +1105,27 @@ where
 				false,
 			)
 		}
+		_ => command_loop(
+			wallet,
+			keychain_mask,
+			&wallet_config,
+			&tor_config,
+			&global_wallet_args,
+			test_mode,
+		),
+		// _ => {
+		// 	let mut owner_api = Owner::new(wallet, None);
+		// 	parse_and_execute(
+		// 		&mut owner_api,
+		// 		keychain_mask,
+		// 		&wallet_config,
+		// 		&tor_config,
+		// 		&global_wallet_args,
+		// 		&wallet_args,
+		// 		test_mode,
+		// 		false,
+		// 	)
+		// }
 	};
 
 	if let Err(e) = res {
@@ -1296,7 +1326,7 @@ where
 			Ok(())
 		}
 		_ => {
-			let msg = format!("Unknown wallet command, use 'grin-wallet help' for details");
+			let msg = format!("Unknown wallet command, use 'echo-wallet help' for details");
 			return Err(Error::ArgumentError(msg));
 		}
 	}

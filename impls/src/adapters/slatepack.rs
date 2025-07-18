@@ -19,7 +19,7 @@ use std::path::PathBuf;
 
 use crate::libwallet::{slatepack, Error, Slate, Slatepack, SlatepackBin, Slatepacker};
 use crate::{SlateGetter, SlatePutter};
-use grin_wallet_util::byte_ser;
+use echo_wallet_util::byte_ser;
 
 // And Slate putter impls to output to files
 pub struct PathToSlatepack<'a> {
