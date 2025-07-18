@@ -700,7 +700,7 @@ where
 							let result = self.post_tx(keychain_mask, &ret_slate, sa.fluff);
 							match result {
 								Ok(_) => {
-									info!("Tx sent ok",);
+									warn!("Tx sent ok",);
 									return Ok(ret_slate);
 								}
 								Err(e) => {

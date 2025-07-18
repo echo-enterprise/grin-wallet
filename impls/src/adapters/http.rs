@@ -89,7 +89,7 @@ impl HttpSlateSender {
 				"{}{}{}",
 				&self.tor_config_dir, MAIN_SEPARATOR, TOR_CONFIG_PATH
 			);
-			info!(
+			warn!(
 				"Starting TOR Process for send at {:?}",
 				self.socks_proxy_addr
 			);

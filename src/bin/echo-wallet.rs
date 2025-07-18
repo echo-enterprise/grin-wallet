@@ -58,7 +58,7 @@ pub fn info_strings() -> (String, String) {
 
 fn log_build_info() {
 	let (basic_info, detailed_info) = info_strings();
-	info!("{}", basic_info);
+	warn!("{}", basic_info);
 	debug!("{}", detailed_info);
 }
 
@@ -135,7 +135,7 @@ fn real_main() -> i32 {
 		_ => {}
 	};
 	init_logger(Some(l), None);
-	info!(
+	warn!(
 		"Using wallet configuration file at {}",
 		config.config_file_path.as_ref().unwrap().to_str().unwrap()
 	);

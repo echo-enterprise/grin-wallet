@@ -31,7 +31,7 @@ use std::{thread, time};
 #[test]
 fn simple_server_wallet() {
 	init_test_logger();
-	info!("starting simple_server_wallet");
+	warn!("starting simple_server_wallet");
 	let _test_name_dir = "test_servers";
 	core::global::set_local_chain_type(core::global::ChainTypes::AutomatedTesting);
 
@@ -141,7 +141,7 @@ fn simple_server_wallet() {
 #[test]
 fn test_p2p() {
 	init_test_logger();
-	info!("starting test_p2p");
+	warn!("starting test_p2p");
 	global::set_local_chain_type(ChainTypes::AutomatedTesting);
 
 	let _test_name_dir = "test_servers";

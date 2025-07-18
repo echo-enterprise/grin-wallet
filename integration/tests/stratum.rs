@@ -66,7 +66,7 @@ fn basic_stratum_server() {
 		}
 		// As this stream falls out of scope it will be disconnected
 	}
-	info!("stratum server connected");
+	warn!("stratum server connected");
 
 	// Create a few new worker connections
 	let mut workers = vec![];
@@ -78,7 +78,7 @@ fn basic_stratum_server() {
 		workers.push(stream);
 	}
 	assert!(workers.len() == 5);
-	info!("workers length verification ok");
+	warn!("workers length verification ok");
 
 	// Simulate a worker lost connection
 	workers.remove(4);
@@ -107,7 +107,7 @@ fn basic_stratum_server() {
 			assert!(false);
 		}
 	}
-	info!("a few stratum JSONRpc commands verification ok");
+	warn!("a few stratum JSONRpc commands verification ok");
 
 	// keepalive - expected "ok" result
 	let mut response = String::new();
@@ -118,7 +118,7 @@ fn basic_stratum_server() {
 	thread::sleep(time::Duration::from_secs(1)); // Wait for the server to reply
 	let _st = workers[2].read_line(&mut response);
 	assert_eq!(response.as_str(), ok_resp);
-	info!("keepalive test ok");
+	warn!("keepalive test ok");
 
 	// "doesnotexist" - error expected
 	let mut response = String::new();
@@ -129,7 +129,7 @@ fn basic_stratum_server() {
 	thread::sleep(time::Duration::from_secs(1)); // Wait for the server to reply
 	let _st = workers[3].read_line(&mut response);
 	assert_eq!(response.as_str(), ok_resp);
-	info!("worker doesnotexist test ok");
+	warn!("worker doesnotexist test ok");
 
 	// Verify stratum server and worker stats
 	let stats = s.get_server_stats().unwrap();
@@ -137,12 +137,12 @@ fn basic_stratum_server() {
 	assert_eq!(stats.stratum_stats.num_workers, 4); // 5 - 1 = 4
 	assert_eq!(stats.stratum_stats.worker_stats[5].is_connected, false); // worker was removed
 	assert_eq!(stats.stratum_stats.worker_stats[1].is_connected, true);
-	info!("stratum server and worker stats verification ok");
+	warn!("stratum server and worker stats verification ok");
 
 	// Start mining blocks
 	let stop = Arc::new(Mutex::new(StopState::new()));
 	s.start_test_miner(None, stop.clone());
-	info!("test miner started");
+	warn!("test miner started");
 
 	// This test is supposed to complete in 3 seconds,
 	// so let's set a timeout on 10s to avoid infinite waiting happened in Travis-CI.
@@ -166,12 +166,12 @@ fn basic_stratum_server() {
 	let _st = workers[2].read_line(&mut jobtemplate);
 	let job_template: Value = serde_json::from_str(&jobtemplate).unwrap();
 	assert_eq!(job_template["method"], expected);
-	info!("blocks broadcasting to workers test ok");
+	warn!("blocks broadcasting to workers test ok");
 
 	// Verify stratum server and worker stats
 	let stats = s.get_server_stats().unwrap();
 	assert_eq!(stats.stratum_stats.num_workers, 3); // 5 - 2 = 3
 	assert_eq!(stats.stratum_stats.worker_stats[2].is_connected, false); // worker was removed
 	assert_ne!(stats.stratum_stats.block_height, 1);
-	info!("basic_stratum_server test done and ok.");
+	warn!("basic_stratum_server test done and ok.");
 }

@@ -305,7 +305,7 @@ where
 		let res = controller::owner_single_use(None, keychain_mask, Some(owner_api), |api, m| {
 			api.create_account_path(m, &label)?;
 			thread::sleep(Duration::from_millis(200));
-			info!("Account: '{}' Created!", label);
+			warn!("Account: '{}' Created!", label);
 			Ok(())
 		});
 		if let Err(e) = res {
@@ -404,7 +404,7 @@ where
 			let result = api.init_send_tx(m, init_args);
 			slate = match result {
 				Ok(s) => {
-					info!(
+					warn!(
 						"Tx created: {} grin to {} (strategy '{}')",
 						core::amount_to_hr_string(amount, false),
 						args.dest,
@@ -413,7 +413,7 @@ where
 					s
 				}
 				Err(e) => {
-					info!("Tx not created: {}", e);
+					warn!("Tx not created: {}", e);
 					return Err(e);
 				}
 			};
@@ -842,7 +842,7 @@ where
 			let result = api.post_tx(m, &slate, args.fluff);
 			match result {
 				Ok(_) => {
-					info!(
+					warn!(
 						"Transaction sent successfully, check the wallet again for confirmation."
 					);
 					println!("Transaction posted");
@@ -986,7 +986,7 @@ where
 			let result = api.process_invoice_tx(m, &slate, init_args);
 			slate = match result {
 				Ok(s) => {
-					info!(
+					warn!(
 						"Invoice processed: {} grin (strategy '{}')",
 						core::amount_to_hr_string(slate.amount, false),
 						args.selection_strategy,
@@ -994,7 +994,7 @@ where
 					s
 				}
 				Err(e) => {
-					info!("Tx not created: {}", e);
+					warn!("Tx not created: {}", e);
 					return Err(e);
 				}
 			};
@@ -1202,7 +1202,7 @@ where
 	let fluff = args.fluff;
 	controller::owner_single_use(None, keychain_mask, Some(owner_api), |api, m| {
 		api.post_tx(m, &slate, fluff)?;
-		info!("Posted transaction");
+		warn!("Posted transaction");
 		return Ok(());
 	})?;
 	Ok(())
@@ -1254,7 +1254,7 @@ where
 				}
 
 				match api.post_tx(m, &stored_tx_slate, args.fluff) {
-					Ok(_) => info!("Reposted transaction at {}", args.id),
+					Ok(_) => warn!("Reposted transaction at {}", args.id),
 					Err(e) => error!("Could not repost transaction at {}. Reason: {}", args.id, e),
 				}
 				return Ok(());
@@ -1267,7 +1267,7 @@ where
 						.as_bytes(),
 				)?;
 				tx_file.sync_all()?;
-				info!("Dumped transaction data for tx {} to {}", args.id, f);
+				warn!("Dumped transaction data for tx {} to {}", args.id, f);
 				return Ok(());
 			}
 		}
@@ -1296,7 +1296,7 @@ where
 		let result = api.cancel_tx(m, args.tx_id, args.tx_slate_id);
 		match result {
 			Ok(_) => {
-				info!("Transaction {} Cancelled", args.tx_id_string);
+				warn!("Transaction {} Cancelled", args.tx_id_string);
 				Ok(())
 			}
 			Err(e) => {

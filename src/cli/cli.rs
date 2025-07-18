@@ -68,7 +68,7 @@ macro_rules! cli_message_inline {
 							print!("{}", *contents);
 							std::io::stdout().flush().unwrap();
 					/*} else {
-							info!($fmt_string, $( $arg ),*);
+							warn!($fmt_string, $( $arg ),*);
 					}*/
 			}
 	};
@@ -86,7 +86,7 @@ macro_rules! cli_message {
 							println!();
 							std::io::stdout().flush().unwrap();
 					/*} else {
-							info!($fmt_string, $( $arg ),*);
+							warn!($fmt_string, $( $arg ),*);
 					}*/
 			}
 	};
