@@ -140,7 +140,7 @@ where
 		loop {
 			thread::sleep(Duration::from_millis(10));
 			if !self.running.load(Ordering::Relaxed) {
-				info!("Proxy stopped");
+				warn!("Proxy stopped");
 				return Ok(());
 			}
 

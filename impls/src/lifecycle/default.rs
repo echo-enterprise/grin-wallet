@@ -152,7 +152,7 @@ where
 			return Err(Error::Lifecycle(msg));
 		}
 
-		info!(
+		warn!(
 			"File {} configured and created",
 			config_file_name.to_str().unwrap(),
 		);
@@ -196,7 +196,7 @@ where
 		.map_err(|_| {
 			Error::Lifecycle("Error creating wallet seed (is mnemonic valid?)".to_owned())
 		})?;
-		info!("Wallet seed file created");
+		warn!("Wallet seed file created");
 		let mut wallet: LMDBBackend<'a, C, K> =
 			match LMDBBackend::new(&data_dir_name, self.node_client.clone()) {
 				Err(e) => {
@@ -213,7 +213,7 @@ where
 			None => batch.save_init_status(WalletInitStatus::InitNoScanning)?,
 		};
 		batch.commit()?;
-		info!("Wallet database backend created at {}", data_dir_name);
+		warn!("Wallet database backend created at {}", data_dir_name);
 		Ok(())
 	}
 
@@ -335,7 +335,7 @@ where
 			new.clone(),
 			false,
 		);
-		info!("Wallet seed file created");
+		warn!("Wallet seed file created");
 
 		let new_wallet_seed = WalletSeed::from_file(&data_dir_name, new)
 			.map_err(|_| Error::Lifecycle("Error opening wallet seed file".into()))?;
@@ -347,7 +347,7 @@ where
 			return Err(Error::Lifecycle(msg));
 		}
 		// Removin
-		info!("Password change confirmed, removing old seed file.");
+		warn!("Password change confirmed, removing old seed file.");
 		fs::remove_file(backup_name).map_err(|e| Error::IO(e.to_string()))?;
 
 		Ok(())

@@ -562,7 +562,7 @@ impl Slate {
 				amount_to_hr_string(fee, false),
 				amount_to_hr_string(self.amount + self.fee_fields.fee(), false)
 			);
-			info!("{}", reason);
+			warn!("{}", reason);
 			return Err(Error::Fee(reason));
 		}
 

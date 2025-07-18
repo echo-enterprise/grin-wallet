@@ -243,7 +243,7 @@ fn simulate_block_propagation() {
 		thread::sleep(time::Duration::from_millis(1_000));
 		time_spent += 1;
 		if time_spent >= 30 {
-			info!("simulate_block_propagation - fail on timeout",);
+			warn!("simulate_block_propagation - fail on timeout",);
 			break;
 		}
 
@@ -284,7 +284,7 @@ fn simulate_full_sync() {
 
 	// Get the current header from s1.
 	let s1_header = s1.chain.head_header().unwrap();
-	info!(
+	warn!(
 		"simulate_full_sync - s1 header head: {} at {}",
 		s1_header.hash(),
 		s1_header.height
@@ -296,7 +296,7 @@ fn simulate_full_sync() {
 		thread::sleep(time::Duration::from_millis(1_000));
 		time_spent += 1;
 		if time_spent >= 30 {
-			info!(
+			warn!(
 				"sync fail. s2.head().height: {}, s1_header.height: {}",
 				s2.head().height,
 				s1_header.height
