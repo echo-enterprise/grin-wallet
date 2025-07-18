@@ -82,7 +82,10 @@ pub struct RouterContext {
 }
 
 /// Setup router and related subsystems.
-pub async fn setup_router(i2p_started_tx: TokioSender<()>) -> anyhow::Result<RouterContext> {
+pub async fn setup_router(
+	i2p_started_tx: oneshot::Sender<std::result::Result<(), String>>,
+	wallet_api_listen_port: u16,
+) -> anyhow::Result<RouterContext> {
 	// let arguments = Arguments::parse();
 	// initialize logger with any logging directive given as a cli argument
 	let handle = init_logger!(None);
@@ -247,7 +250,7 @@ pub async fn setup_router(i2p_started_tx: TokioSender<()>) -> anyhow::Result<Rou
 				.await
 				{
 					Ok(proxy) => {
-						let _ = i2p_started_tx.try_send(());
+						let _ = i2p_started_tx.send(Ok(()));
 						if let Err(error) = proxy.run().await {
 							tracing::debug!(
 								target: LOG_TARGET,
@@ -256,21 +259,30 @@ pub async fn setup_router(i2p_started_tx: TokioSender<()>) -> anyhow::Result<Rou
 							);
 						}
 					}
-					Err(error) => tracing::warn!(
-						target: LOG_TARGET,
-						?error,
-						"failed to start http proxy",
-					),
+					Err(error) => {
+						let _ = i2p_started_tx
+							.send(Err(format!("Failed to start HTTP proxy: {}", error)));
+						tracing::warn!(
+							target: LOG_TARGET,
+							?error,
+							"failed to start http proxy",
+						);
+					}
 				}
 			});
 		}
 
 		// start client and server tunnels
-		tokio::spawn(ClientTunnelManager::new(client_tunnels, address.port()).run());
+		// tokio::spawn(ClientTunnelManager::new(client_tunnels, address.port()).run());
 		tokio::spawn(
-			ServerTunnelManager::new(server_tunnels, address.port(), path.clone())
-				.await
-				.run(),
+			ServerTunnelManager::new(
+				server_tunnels,
+				address.port(),
+				path.clone(),
+				wallet_api_listen_port,
+			)
+			.await
+			.run(),
 		);
 	}
 

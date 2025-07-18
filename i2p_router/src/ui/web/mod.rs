@@ -48,7 +48,7 @@ const ROUTER_CONSOLE: &str =
 	include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/index.html"));
 
 /// Default listening port for web UI.
-const LISTEN_PORT: u16 = 7657;
+const LISTEN_PORT: u16 = 7057;
 
 /// Router state.
 struct InnerRouterState {

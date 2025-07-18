@@ -32,6 +32,8 @@ use rustyline::highlight::{Highlighter, MatchingBracketHighlighter};
 use rustyline::hint::Hinter;
 use rustyline::validate::Validator;
 use rustyline::{CompletionType, Config, Context, EditMode, Editor, Helper, OutputStreamType};
+// use tokio::sync::oneshot;
+use futures::channel::oneshot;
 use std::borrow::Cow::{self, Borrowed, Owned};
 use std::process::exit;
 use std::sync::mpsc::{channel, Receiver};
@@ -39,6 +41,7 @@ use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
 
+use tokio::runtime::Runtime;
 use tokio::sync::mpsc::channel as tokio_channel;
 
 const COLORED_PROMPT: &'static str = "\x1b[36mecho-wallet>\x1b[0m ";
@@ -127,18 +130,33 @@ where
 {
 	// Start I2P router
 	let (i2p_shutdown_tx, i2p_shutdown_rx) = tokio_channel::<()>(1);
-	let (i2p_started_tx, mut i2p_started_rx) = tokio_channel::<()>(1);
+	let (i2p_started_tx, i2p_started_rx) = oneshot::channel::<Result<(), String>>();
 
-	let res = start_i2p_router(i2p_shutdown_tx.clone(), i2p_shutdown_rx, i2p_started_tx);
+	let res = start_i2p_router(
+		i2p_shutdown_tx.clone(),
+		i2p_shutdown_rx,
+		i2p_started_tx,
+		&wallet_config.clone(),
+	);
 	if let Err(e) = res {
 		println!("Error at starting i2p router {}", e);
 		exit(0);
 	}
 
 	// Wait for I2P router to start
-	while let Ok(()) = i2p_started_rx.try_recv() {
-		// I2P router has started, break out of the wait loop
-		break;
+	let runtime = Runtime::new().unwrap();
+	match runtime.block_on(i2p_started_rx) {
+		Ok(Ok(())) => {
+			println!("I2P router started successfully");
+		}
+		Ok(Err(error)) => {
+			eprintln!("Failed to start I2P router: {}", error);
+			exit(1);
+		}
+		Err(_) => {
+			eprintln!("Failed to start I2P router: channel closed unexpectedly");
+			exit(1);
+		}
 	}
 
 	//
@@ -187,7 +205,7 @@ where
 				}
 				// TODO tidy up a bit
 				if command.to_lowercase() == "exit" {
-					i2p_shutdown_tx.try_send(());
+					let _ = i2p_shutdown_tx.try_send(());
 					break;
 				}
 				/* use crate::common::{is_cli, COLORED_PROMPT}; */

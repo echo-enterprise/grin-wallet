@@ -1969,6 +1969,7 @@ dependencies = [
  "echo_wallet_impls",
  "echo_wallet_libwallet",
  "echo_wallet_util",
+ "futures 0.3.31",
  "grin_api",
  "grin_core",
  "grin_keychain",

@@ -61,16 +61,58 @@ impl ServerTunnelManager {
 		configs: Vec<ServerTunnelConfig>,
 		sam_tcp_port: u16,
 		base_path: PathBuf,
+		wallet_api_listen_port: u16,
 	) -> Self {
 		let mut tunnels = Vec::<Arc<TunnelConfig>>::new();
 		let mut router_api = RouterApi::new(sam_tcp_port);
+
+		// create wallet foreign listener tunnel
+		// let wallet_foreign_listener_name = "wallet_foreign_listener".to_string();
+		// let wallet_foreign_listener_port = wallet_api_listen_port;
+		// let wallet_foreign_listener_destination_path = base_path.join("wallet_foreign_listener.destination").to_string_lossy().to_string();
+
+		// match Self::load_or_create_destination(
+		// 	&mut router_api,
+		// 	base_path.join("wallet_foreign_listener.destination"),
+		// )
+		// .await
+		// {
+		// 	None => {
+		// 		tracing::warn!(
+		// 			target: LOG_TARGET,
+		// 			%wallet_foreign_listener_name,
+		// 			%wallet_foreign_listener_destination_path,
+		// 			"failed to load or create destination for server tunnel",
+		// 		);
+		// 	}
+		// 	Some(destination) => {
+		// 		tunnels.push(Arc::from(TunnelConfig {
+		// 			destination,
+		// 			name: wallet_foreign_listener_name,
+		// 			port: wallet_foreign_listener_port,
+		// 			sam_tcp_port,
+		// 		}));
+		// 	}
+		// };
+
+		let mut extended_configs = vec![];
+		extended_configs.extend(configs);
+
+		extended_configs.push(ServerTunnelConfig {
+			name: "wallet_foreign_listener".to_string(),
+			port: wallet_api_listen_port,
+			destination_path: base_path
+				.join("wallet_foreign_listener.destination")
+				.to_string_lossy()
+				.to_string(),
+		});
 
 		for ServerTunnelConfig {
 			name,
 			port,
 			destination_path,
 			..
-		} in configs
+		} in extended_configs
 		{
 			match Self::load_or_create_destination(
 				&mut router_api,

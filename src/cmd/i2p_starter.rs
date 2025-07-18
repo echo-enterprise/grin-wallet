@@ -19,6 +19,8 @@
 #![allow(clippy::crate_in_macro_def)]
 #![allow(clippy::too_many_arguments)]
 
+use echo_wallet_config::WalletConfig;
+use futures::channel::oneshot;
 use i2p_router::{router_event_loop, setup_router, ui::web::RouterUi, RouterContext};
 use std::sync::OnceLock;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
@@ -28,7 +30,8 @@ static RUNTIME: OnceLock<tokio::runtime::Runtime> = OnceLock::new();
 pub fn start_i2p_router(
 	shutdown_tx: Sender<()>,
 	shutdown_rx: Receiver<()>,
-	i2p_started_tx: Sender<()>,
+	i2p_started_tx: oneshot::Sender<std::result::Result<(), String>>,
+	wallet_config: &WalletConfig,
 ) -> anyhow::Result<()> {
 	let runtime =
 		RUNTIME.get_or_init(|| tokio::runtime::Runtime::new().expect("Failed to create runtime"));
@@ -38,11 +41,11 @@ pub fn start_i2p_router(
 		port_mapper,
 		events,
 		router_ui_config,
-	} = runtime.block_on(setup_router(i2p_started_tx))?;
+	} = runtime.block_on(setup_router(i2p_started_tx, wallet_config.api_listen_port))?;
 
 	// Spawn the UI task (infinite loop)
 	runtime.spawn(async move {
-		RouterUi::new(events, Some(7657), 5, shutdown_tx)
+		RouterUi::new(events, Some(7057), 5, shutdown_tx)
 			.run()
 			.await;
 	});

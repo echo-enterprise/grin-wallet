@@ -33,6 +33,7 @@ lazy_static = "1"
 tokio.workspace = true
 anyhow.workspace = true
 yosemite.workspace = true
+futures.workspace = true
 
 echo_wallet_api = { path = "./api", version = "5.4.0-alpha.1" }
 echo_wallet_impls = { path = "./impls", version = "5.4.0-alpha.1" }
