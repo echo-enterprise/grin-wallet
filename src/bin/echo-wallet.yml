@@ -1,14 +1,14 @@
 name: echo-wallet
-about: Reference Grin Wallet
-author: The Grin Team
+about: Reference Echo Wallet
+author: The Echo Team
 
 args:
   - testnet:
-      help: Run grin against the Testnet (as opposed to mainnet)
+      help: Run echo against the Testnet (as opposed to mainnet)
       long: testnet
       takes_value: false
   - usernet:
-      help: Run grin as a local-only network. Doesn't block peer connections but will not connect to any peer or seed
+      help: Run echo as a local-only network. Doesn't block peer connections but will not connect to any peer or seed
       long: usernet
       takes_value: false
   - pass:
@@ -51,7 +51,7 @@ subcommands:
   - rewind_hash:
       about: Return the hash of the wallet root public key.
   - scan_rewind_hash:
-      about: Scan the UTXO set and return the outputs and the total of grin owned by a view wallet rewind hash.
+      about: Scan the UTXO set and return the outputs and the total of echo owned by a view wallet rewind hash.
       args:
         - rewind_hash:
               help: Rewind hash of the wallet to be scanned in order to retrieve all the outputs and balance.
@@ -384,7 +384,7 @@ subcommands:
       about: Initialize a new wallet seed file and database
       args:
         - here:
-            help: Create wallet files in the current directory instead of the default ~/.grin directory
+            help: Create wallet files in the current directory instead of the default ~/.echo directory
             short: h
             long: here
             takes_value: false

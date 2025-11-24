@@ -1989,6 +1989,7 @@ dependencies = [
  "thiserror 1.0.66",
  "tokio 1.46.1",
  "url",
+ "yaml-rust",
  "yosemite",
 ]
 

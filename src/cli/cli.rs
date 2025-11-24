@@ -20,11 +20,12 @@ use anyhow::Error as AnyhowError;
 use clap::App;
 //use colored::Colorize;
 use echo_wallet_api::Owner;
-use echo_wallet_config::{TorConfig, WalletConfig};
+use echo_wallet_config::{get_echo_path, TorConfig, WalletConfig};
 use echo_wallet_controller::command::GlobalArgs;
 use echo_wallet_controller::Error;
 use echo_wallet_impls::DefaultWalletImpl;
 use echo_wallet_libwallet::{NodeClient, StatusMessage, WalletInst, WalletLCProvider};
+use grin_core::global::ChainTypes;
 use grin_keychain as keychain;
 use rustyline::completion::{Completer, FilenameCompleter, Pair};
 use rustyline::error::ReadlineError;
@@ -32,17 +33,15 @@ use rustyline::highlight::{Highlighter, MatchingBracketHighlighter};
 use rustyline::hint::Hinter;
 use rustyline::validate::Validator;
 use rustyline::{CompletionType, Config, Context, EditMode, Editor, Helper, OutputStreamType};
+use std::fs;
+use yaml_rust::YamlLoader;
 // use tokio::sync::oneshot;
 use futures::channel::oneshot;
 use std::borrow::Cow::{self, Borrowed, Owned};
-use std::process::exit;
 use std::sync::mpsc::{channel, Receiver};
 use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
-
-use tokio::runtime::Runtime;
-use tokio::sync::mpsc::channel as tokio_channel;
 
 const COLORED_PROMPT: &'static str = "\x1b[36mecho-wallet>\x1b[0m ";
 const PROMPT: &'static str = "echo-wallet> ";
@@ -128,6 +127,10 @@ where
 	C: NodeClient + 'static,
 	K: keychain::Keychain + 'static,
 {
+	/*
+	// Comment out I2P router for now by Kenta
+	// TODO: Uncomment I2P router for production by Kenta
+
 	// Start I2P router
 	let (i2p_shutdown_tx, i2p_shutdown_rx) = tokio_channel::<()>(1);
 	let (i2p_started_tx, i2p_started_rx) = oneshot::channel::<Result<(), String>>();
@@ -158,6 +161,7 @@ where
 			exit(1);
 		}
 	}
+	*/
 
 	//
 	let editor = Config::builder()
@@ -185,8 +189,36 @@ where
 		let _ = reader.load_history(&history_file);
 	}*/
 
-	let yml = load_yaml!("../bin/echo-wallet.yml");
-	let mut app = App::from_yaml(yml).version(crate_version!());
+	let chain_type = wallet_config
+		.chain_type
+		.as_ref()
+		.unwrap_or(&ChainTypes::Mainnet);
+	let echo_path = match get_echo_path(chain_type, false) {
+		Ok(p) => p,
+		Err(e) => {
+			println!("Error getting echo path: {}", e);
+			return Err(Error::GenericError(e.to_string()));
+		}
+	};
+
+	let yml_path = echo_path.join("echo-wallet.yml");
+	let yml_contents = match fs::read_to_string(&yml_path) {
+		Ok(contents) => contents,
+		Err(e) => {
+			println!("Error reading YAML file {}: {}", yml_path.display(), e);
+			return Err(Error::GenericError(format!(
+				"Failed to read YAML file: {}",
+				e
+			)));
+		}
+	};
+
+	let yml = YamlLoader::load_from_str(&yml_contents)
+		.map_err(|e| Error::GenericError(format!("Failed to parse YAML: {}", e)))?;
+	let yml_doc = yml
+		.get(0)
+		.ok_or_else(|| Error::GenericError("YAML file is empty".to_string()))?;
+	let mut app = App::from_yaml(yml_doc).version(crate_version!());
 	let mut keychain_mask = keychain_mask;
 
 	// catch updater messages
@@ -205,7 +237,8 @@ where
 				}
 				// TODO tidy up a bit
 				if command.to_lowercase() == "exit" {
-					let _ = i2p_shutdown_tx.try_send(());
+					// I2P router shutdown is commented out
+					// let _ = i2p_shutdown_tx.try_send(());
 					break;
 				}
 				/* use crate::common::{is_cli, COLORED_PROMPT}; */
