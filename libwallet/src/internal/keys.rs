@@ -13,9 +13,9 @@
 // limitations under the License.
 
 //! Wallet key management functions
+use crate::echo_keychain::{ChildNumber, ExtKeychain, Identifier, Keychain};
+use crate::echo_util::secp::key::SecretKey;
 use crate::error::Error;
-use crate::grin_keychain::{ChildNumber, ExtKeychain, Identifier, Keychain};
-use crate::grin_util::secp::key::SecretKey;
 use crate::types::{AcctPathMapping, NodeClient, WalletBackend};
 
 /// Get next available key in the wallet for a given parent

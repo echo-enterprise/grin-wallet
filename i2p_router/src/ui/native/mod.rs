@@ -161,9 +161,11 @@ impl RouterUi {
 							transport,
 							tunnel,
 						} => {
-							self.transit_bandwidth = transit.bandwidth;
+							self.transit_bandwidth =
+								transit.inbound_bandwidth + transit.outbound_bandwidth;
 							self.num_transit_tunnels = transit.num_tunnels;
-							self.bandwidth = transport.bandwidth;
+							self.bandwidth =
+								transport.inbound_bandwidth + transport.outbound_bandwidth;
 							self.num_routers = transport.num_connected_routers;
 							self.server_destinations.extend(server_destinations);
 							self.client_destinations.extend(client_destinations);

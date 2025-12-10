@@ -18,7 +18,7 @@ extern crate echo_wallet_controller as wallet;
 extern crate echo_wallet_impls as impls;
 extern crate echo_wallet_libwallet as libwallet;
 
-use grin_core as core;
+use echo_core as core;
 
 use self::core::core::transaction;
 use self::core::global;

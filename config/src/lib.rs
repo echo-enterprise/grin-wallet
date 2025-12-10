@@ -23,8 +23,8 @@
 #[macro_use]
 extern crate serde_derive;
 
-use grin_core as core;
-use grin_util as util;
+use echo_core as core;
+use echo_util as util;
 
 mod comments;
 pub mod config;

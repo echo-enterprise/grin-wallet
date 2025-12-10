@@ -2,8 +2,8 @@
 
 [![Continuous Integration](https://github.com/mimblewimble/echo-wallet/actions/workflows/ci.yaml/badge.svg)](https://github.com/mimblewimble/echo-wallet/actions/workflows/ci.yaml)
 [![Coverage Status](https://img.shields.io/codecov/c/github/mimblewimble/echo-wallet/master.svg)](https://codecov.io/gh/mimblewimble/echo-wallet)
-[![Chat](https://img.shields.io/gitter/room/grin_community/Lobby.svg)](https://gitter.im/grin_community/Lobby)
-[![Support](https://img.shields.io/badge/support-on%20gitter-brightgreen.svg)](https://gitter.im/grin_community/support)
+[![Chat](https://img.shields.io/gitter/room/echo_community/Lobby.svg)](https://gitter.im/echo_community/Lobby)
+[![Support](https://img.shields.io/badge/support-on%20gitter-brightgreen.svg)](https://gitter.im/echo_community/support)
 [![](https://img.shields.io/badge/dynamic/json.svg?label=docs&uri=https%3A%2F%2Fcrates.io%2Fapi%2Fv1%2Fcrates%2Fecho-wallet%2Fversions&query=%24.versions%5B0%5D.num&colorB=4F74A6)](https://docs.rs/releases/search?query=echo_wallet)
 [![Release Version](https://img.shields.io/github/release/mimblewimble/echo-wallet.svg)](https://github.com/mimblewimble/echo-wallet/releases)
 [![License](https://img.shields.io/github/license/mimblewimble/echo-wallet.svg)](https://github.com/mimblewimble/echo-wallet/blob/master/LICENSE)

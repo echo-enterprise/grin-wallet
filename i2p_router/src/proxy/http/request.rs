@@ -126,10 +126,7 @@ impl Request {
 			.find(|header| header.name.to_lowercase() == "host")
 		{
 			None => {
-				tracing::warn!(
-					target: LOG_TARGET,
-					"host missing",
-				);
+				tracing::warn!(target: LOG_TARGET, "host missing",);
 				return Err(HttpError::InvalidHost);
 			}
 			Some(host) => {
@@ -192,19 +189,16 @@ impl Request {
 		let (host, keep_original_host) = match (self.host, address_book, outproxy) {
 			(HostKind::B32 { host }, _, _) => (host, false),
 			(HostKind::I2p { host }, Some(address_book), _) => {
-				match address_book.resolve_b32(host.clone()) {
-					Either::Left(host) => (format!("{host}.b32.i2p"), false),
-					Either::Right(future) => match future.await {
-						Some(host) => (format!("{host}.b32.i2p"), false),
-						None => {
-							tracing::warn!(
-								target: LOG_TARGET,
-								%host,
-								".i2p host not found in the address book",
-							);
-							return Err(HttpError::HostNotFound);
-						}
-					},
+				match address_book.resolve_base32(&host) {
+					Some(host) => (format!("{host}.b32.i2p"), false),
+					None => {
+						tracing::warn!(
+							target: LOG_TARGET,
+							%host,
+							".i2p host not found in the address book",
+						);
+						return Err(HttpError::HostNotFound);
+					}
 				}
 			}
 			(HostKind::Clearnet { .. }, _, Some(outproxy)) => (outproxy.clone(), true),
@@ -281,11 +275,7 @@ impl Request {
 					sanitized.extend_from_slice(header.value);
 					sanitized.extend_from_slice("\r\n".as_bytes());
 				} else {
-					tracing::warn!(
-						target: LOG_TARGET,
-						?value,
-						"skipping invalid `Referer`",
-					)
+					tracing::warn!(target: LOG_TARGET, ?value, "skipping invalid `Referer`",)
 				}
 
 				continue;

@@ -21,14 +21,14 @@ extern crate prettytable;
 extern crate log;
 #[macro_use]
 extern crate lazy_static;
+use echo_api as api;
+use echo_core as core;
+use echo_keychain as keychain;
+use echo_util as util;
 use echo_wallet_api as apiwallet;
 use echo_wallet_config as config;
 use echo_wallet_impls as impls;
 use echo_wallet_libwallet as libwallet;
-use grin_api as api;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_util as util;
 
 pub mod command;
 pub mod controller;

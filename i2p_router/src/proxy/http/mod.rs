@@ -129,19 +129,16 @@ impl HttpProxy {
 					}
 					true => match (outproxy.ends_with(".b32.i2p"), &address_book_handle) {
 						(true, _) => Some(outproxy.to_owned()),
-						(false, Some(handle)) => match handle.resolve_b32(outproxy.to_owned()) {
-							Either::Left(host) => Some(format!("{host}.b32.i2p")),
-							Either::Right(future) => match future.await {
-								Some(host) => Some(format!("{host}.b32.i2p")),
-								None => {
-									tracing::warn!(
-										target: LOG_TARGET,
-										%outproxy,
-										"outproxy not found in address book",
-									);
-									None
-								}
-							},
+						(false, Some(handle)) => match handle.resolve_base32(outproxy) {
+							Some(host) => Some(format!("{host}.b32.i2p")),
+							None => {
+								tracing::warn!(
+									target: LOG_TARGET,
+									%outproxy,
+									"outproxy not found in address book",
+								);
+								None
+							}
 						},
 						(false, None) => {
 							tracing::warn!(

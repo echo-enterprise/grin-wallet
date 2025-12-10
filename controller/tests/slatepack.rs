@@ -17,8 +17,8 @@ extern crate log;
 extern crate echo_wallet_controller as wallet;
 extern crate echo_wallet_impls as impls;
 
+use echo_core as core;
 use echo_wallet_libwallet as libwallet;
-use grin_core as core;
 
 use impls::test_framework::{self, LocalWalletClient};
 use impls::{PathToSlatepack, SlatePutter as _};

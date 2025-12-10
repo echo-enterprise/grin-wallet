@@ -105,9 +105,9 @@ where
 	///
 	/// # Example
 	/// ```
-	/// use grin_keychain as keychain;
-	/// use grin_util as util;
-	/// use grin_core;
+	/// use echo_keychain as keychain;
+	/// use echo_util as util;
+	/// use echo_core;
 	/// use echo_wallet_api as api;
 	/// use echo_wallet_config as config;
 	/// use echo_wallet_impls as impls;
@@ -119,7 +119,7 @@ where
 	/// use std::sync::Arc;
 	/// use util::{Mutex, ZeroingString};
 	///
-	/// use grin_core::global;
+	/// use echo_core::global;
 	///
 	/// use api::Foreign;
 	/// use config::WalletConfig;
@@ -456,15 +456,15 @@ where
 #[macro_export]
 macro_rules! doctest_helper_setup_doc_env_foreign {
 	($wallet:ident, $wallet_config:ident) => {
+		use echo_core;
+		use echo_keychain as keychain;
+		use echo_util as util;
 		use echo_wallet_api as api;
 		use echo_wallet_config as config;
 		use echo_wallet_impls as impls;
 		use echo_wallet_libwallet as libwallet;
-		use grin_core;
-		use grin_keychain as keychain;
-		use grin_util as util;
 
-		use grin_core::global;
+		use echo_core::global;
 		use keychain::ExtKeychain;
 		use tempfile::tempdir;
 

@@ -15,19 +15,19 @@
 //! Functions for building partial transactions to be passed
 //! around during an interactive wallet exchange
 
-use crate::error::Error;
-use crate::grin_core::core::amount_to_hr_string;
-use crate::grin_core::core::transaction::{
+use crate::echo_core::core::amount_to_hr_string;
+use crate::echo_core::core::transaction::{
 	FeeFields, Input, Inputs, KernelFeatures, NRDRelativeHeight, Output, OutputFeatures,
 	Transaction, TxKernel, Weighting,
 };
-use crate::grin_core::libtx::{aggsig, build, proof::ProofBuild, tx_fee};
-use crate::grin_core::map_vec;
-use crate::grin_keychain::{BlindSum, BlindingFactor, Keychain, SwitchCommitmentType};
-use crate::grin_util::secp::key::{PublicKey, SecretKey};
-use crate::grin_util::secp::pedersen::Commitment;
-use crate::grin_util::secp::Signature;
-use crate::grin_util::{secp, static_secp_instance};
+use crate::echo_core::libtx::{aggsig, build, proof::ProofBuild, tx_fee};
+use crate::echo_core::map_vec;
+use crate::echo_keychain::{BlindSum, BlindingFactor, Keychain, SwitchCommitmentType};
+use crate::echo_util::secp::key::{PublicKey, SecretKey};
+use crate::echo_util::secp::pedersen::Commitment;
+use crate::echo_util::secp::Signature;
+use crate::echo_util::{secp, static_secp_instance};
+use crate::error::Error;
 use ed25519_dalek::PublicKey as DalekPublicKey;
 use ed25519_dalek::Signature as DalekSignature;
 use serde::ser::{Serialize, Serializer};
@@ -40,7 +40,7 @@ use crate::slate_versions::v4::{
 	SlateStateV4, SlateV4, VersionCompatInfoV4,
 };
 use crate::slate_versions::VersionedSlate;
-use crate::slate_versions::{CURRENT_SLATE_VERSION, GRIN_BLOCK_HEADER_VERSION};
+use crate::slate_versions::{CURRENT_SLATE_VERSION, ECHO_BLOCK_HEADER_VERSION};
 use crate::Context;
 
 #[derive(Debug, Clone)]
@@ -270,7 +270,7 @@ impl Slate {
 			participant_data: vec![],
 			version_info: VersionCompatInfo {
 				version: CURRENT_SLATE_VERSION,
-				block_header_version: GRIN_BLOCK_HEADER_VERSION,
+				block_header_version: ECHO_BLOCK_HEADER_VERSION,
 			},
 			payment_proof: None,
 			kernel_features_args: None,

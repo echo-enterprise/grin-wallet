@@ -16,17 +16,17 @@
 //! implementation
 
 use crate::config::{TorConfig, WalletConfig};
+use crate::echo_core::core::hash::Hash;
+use crate::echo_core::core::FeeFields;
+use crate::echo_core::core::{Output, Transaction, TxKernel};
+use crate::echo_core::libtx::{aggsig, secp_ser};
+use crate::echo_core::{global, ser};
+use crate::echo_keychain::{Identifier, Keychain};
+use crate::echo_util::logger::LoggingConfig;
+use crate::echo_util::secp::key::{PublicKey, SecretKey};
+use crate::echo_util::secp::{self, pedersen, Secp256k1};
+use crate::echo_util::{ToHex, ZeroingString};
 use crate::error::Error;
-use crate::grin_core::core::hash::Hash;
-use crate::grin_core::core::FeeFields;
-use crate::grin_core::core::{Output, Transaction, TxKernel};
-use crate::grin_core::libtx::{aggsig, secp_ser};
-use crate::grin_core::{global, ser};
-use crate::grin_keychain::{Identifier, Keychain};
-use crate::grin_util::logger::LoggingConfig;
-use crate::grin_util::secp::key::{PublicKey, SecretKey};
-use crate::grin_util::secp::{self, pedersen, Secp256k1};
-use crate::grin_util::{ToHex, ZeroingString};
 use crate::slate_versions::ser as dalek_ser;
 use crate::InitTxArgs;
 use chrono::prelude::*;

@@ -20,7 +20,7 @@ extern crate echo_wallet_impls as impls;
 extern crate echo_wallet_libwallet as libwallet;
 
 // use crate::libwallet::api_impl::owner_updater::{start_updater_log_thread, StatusMessage};
-// use echo_wallet_util::grin_core as core;
+// use echo_wallet_util::echo_core as core;
 
 use impls::test_framework::{self, LocalWalletClient};
 use std::sync::atomic::Ordering;

@@ -14,16 +14,16 @@
 //! Functions to restore a wallet's outputs from just the master seed
 
 use crate::api_impl::owner_updater::StatusMessage;
-use crate::grin_core::consensus::{valid_header_version, WEEK_HEIGHT};
-use crate::grin_core::core::HeaderVersion;
-use crate::grin_core::global;
-use crate::grin_core::libtx::proof;
-use crate::grin_keychain::{Identifier, Keychain, SwitchCommitmentType};
-use crate::grin_util::secp::key::SecretKey;
-use crate::grin_util::secp::pedersen;
-use crate::grin_util::secp::{ContextFlag, Secp256k1};
-use crate::grin_util::Mutex;
-use crate::grin_util::{from_hex, ToHex};
+use crate::echo_core::consensus::{valid_header_version, WEEK_HEIGHT};
+use crate::echo_core::core::HeaderVersion;
+use crate::echo_core::global;
+use crate::echo_core::libtx::proof;
+use crate::echo_keychain::{Identifier, Keychain, SwitchCommitmentType};
+use crate::echo_util::secp::key::SecretKey;
+use crate::echo_util::secp::pedersen;
+use crate::echo_util::secp::{ContextFlag, Secp256k1};
+use crate::echo_util::Mutex;
+use crate::echo_util::{from_hex, ToHex};
 use crate::internal::{keys, updater};
 use crate::types::*;
 use crate::{wallet_lock, Error, OutputCommitMapping};

@@ -20,15 +20,15 @@ use crate::util::secp::key::SecretKey;
 use crate::util::{Mutex, ZeroingString};
 /// Argument parsing and error handling for wallet commands
 use clap::ArgMatches;
+use echo_core as core;
+use echo_core::core::amount_to_hr_string;
+use echo_keychain as keychain;
 use echo_wallet_api::Owner;
 use echo_wallet_config::{config_file_exists, TorConfig, WalletConfig};
 use echo_wallet_controller::{command, Error};
 use echo_wallet_impls::{DefaultLCProvider, DefaultWalletImpl};
 use echo_wallet_libwallet::{self, Slate, SlatepackAddress, SlatepackArmor};
 use echo_wallet_libwallet::{IssueInvoiceTxArgs, NodeClient, WalletInst, WalletLCProvider};
-use grin_core as core;
-use grin_core::core::amount_to_hr_string;
-use grin_keychain as keychain;
 use linefeed::terminal::Signal;
 use linefeed::{Interface, ReadResult};
 use rpassword;
@@ -1083,6 +1083,8 @@ where
 	// 	test_mode,
 	// );
 
+	/*
+	// Comment out CLI mode for now by Kenta since it were changed to add emissary cli
 	let res = match wallet_args.subcommand() {
 		// ("cli", Some(_)) => command_loop(
 		// 	wallet,
@@ -1126,6 +1128,31 @@ where
 		// 		false,
 		// 	)
 		// }
+	};
+	*/
+
+	let res = match wallet_args.subcommand() {
+		("cli", Some(_)) => command_loop(
+			wallet,
+			keychain_mask,
+			&wallet_config,
+			&tor_config,
+			&global_wallet_args,
+			test_mode,
+		),
+		_ => {
+			let mut owner_api = Owner::new(wallet, None);
+			parse_and_execute(
+				&mut owner_api,
+				keychain_mask,
+				&wallet_config,
+				&tor_config,
+				&global_wallet_args,
+				&wallet_args,
+				test_mode,
+				false,
+			)
+		}
 	};
 
 	if let Err(e) = res {

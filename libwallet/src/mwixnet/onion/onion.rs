@@ -23,14 +23,14 @@ use std::result::Result;
 
 use chacha20::cipher::{NewCipher, StreamCipher};
 use chacha20::{ChaCha20, Key, Nonce};
-use grin_core::core::FeeFields;
-use grin_core::ser::{self, Readable, Reader, Writeable, Writer};
-use grin_util::secp::{
+use echo_core::core::FeeFields;
+use echo_core::ser::{self, Readable, Reader, Writeable, Writer};
+use echo_util::secp::{
 	self as secp256k1zkp,
 	key::SecretKey,
 	pedersen::{Commitment, RangeProof},
 };
-use grin_util::{self, ToHex};
+use echo_util::{self, ToHex};
 use hmac::digest::InvalidLength;
 use hmac::{Hmac, Mac};
 use serde::ser::SerializeStruct;
@@ -292,7 +292,7 @@ impl<'de> serde::de::Deserialize<'de> for Onion {
 						Field::Pubkey => {
 							let val: String = map.next_value()?;
 							let vec =
-								grin_util::from_hex(&val).map_err(serde::de::Error::custom)?;
+								echo_util::from_hex(&val).map_err(serde::de::Error::custom)?;
 							pubkey =
 								Some(xPublicKey::from(vec_to_array::<32>(&vec).map_err(
 									|_| serde::de::Error::custom("Invalid length pubkey"),
@@ -301,7 +301,7 @@ impl<'de> serde::de::Deserialize<'de> for Onion {
 						Field::Commit => {
 							let val: String = map.next_value()?;
 							let vec =
-								grin_util::from_hex(&val).map_err(serde::de::Error::custom)?;
+								echo_util::from_hex(&val).map_err(serde::de::Error::custom)?;
 							commit = Some(Commitment::from_vec(vec));
 						}
 						Field::Data => {
@@ -309,7 +309,7 @@ impl<'de> serde::de::Deserialize<'de> for Onion {
 							let mut vec: Vec<Vec<u8>> = Vec::new();
 							for hex in val {
 								vec.push(
-									grin_util::from_hex(&hex).map_err(serde::de::Error::custom)?,
+									echo_util::from_hex(&hex).map_err(serde::de::Error::custom)?,
 								);
 							}
 							data = Some(vec);
@@ -371,7 +371,7 @@ pub mod tests {
 	use crate::mwixnet::onion::crypto::secp::random_secret;
 	use crate::mwixnet::onion::{new_hop, Hop};
 
-	use grin_core::core::FeeFields;
+	use echo_core::core::FeeFields;
 
 	/// Test end-to-end Onion creation and unwrapping logic.
 	#[test]

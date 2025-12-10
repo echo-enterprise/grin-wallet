@@ -14,12 +14,12 @@
 
 //! Error types for libwallet
 
-use crate::grin_core::core::{committed, transaction};
-use crate::grin_core::libtx;
-use crate::grin_keychain;
-use crate::grin_util::secp;
+use crate::echo_core::core::{committed, transaction};
+use crate::echo_core::libtx;
+use crate::echo_keychain;
+use crate::echo_util::secp;
 use crate::util;
-use grin_store;
+use echo_store;
 
 /// Wallet errors, mostly wrappers around underlying crypto or I/O errors.
 #[derive(Clone, Eq, PartialEq, Debug, thiserror::Error, Serialize, Deserialize)]
@@ -47,7 +47,7 @@ pub enum Error {
 
 	/// Keychain error
 	#[error("Keychain error")]
-	Keychain(#[from] grin_keychain::Error),
+	Keychain(#[from] echo_keychain::Error),
 
 	/// Transaction Error
 	#[error("Transaction error")]
@@ -83,7 +83,7 @@ pub enum Error {
 
 	/// Other serialization errors
 	#[error("Ser/Deserialization error")]
-	Deser(crate::grin_core::ser::Error),
+	Deser(crate::echo_core::ser::Error),
 
 	/// IO Error
 	#[error("I/O error {0}")]
@@ -326,8 +326,8 @@ pub enum Error {
 	GenericError(String),
 }
 
-impl From<grin_store::Error> for Error {
-	fn from(error: grin_store::Error) -> Error {
+impl From<echo_store::Error> for Error {
+	fn from(error: echo_store::Error) -> Error {
 		Error::Backend(format!("{}", error))
 	}
 }

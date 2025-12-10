@@ -17,12 +17,12 @@ extern crate echo_wallet_controller as wallet;
 extern crate echo_wallet_impls as impls;
 extern crate echo_wallet_util;
 
-use echo_wallet_libwallet as libwallet;
-use grin_core::core::OutputFeatures;
-use grin_keychain::{
+use echo_core::core::OutputFeatures;
+use echo_keychain::{
 	mnemonic, BlindingFactor, ExtKeychain, ExtKeychainPath, Keychain, SwitchCommitmentType,
 };
-use grin_util::{secp, ZeroingString};
+use echo_util::{secp, ZeroingString};
+use echo_wallet_libwallet as libwallet;
 use impls::test_framework::LocalWalletClient;
 use rand::{thread_rng, Rng};
 use std::sync::atomic::Ordering;

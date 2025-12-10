@@ -19,9 +19,9 @@ use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
 
-use crate::grin_keychain::Keychain;
-use crate::grin_util::secp::key::SecretKey;
-use crate::grin_util::Mutex;
+use crate::echo_keychain::Keychain;
+use crate::echo_util::secp::key::SecretKey;
+use crate::echo_util::Mutex;
 
 use crate::api_impl::owner;
 use crate::types::NodeClient;

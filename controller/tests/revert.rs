@@ -16,20 +16,20 @@
 mod common;
 
 use common::{clean_output_dir, create_wallet_proxy, setup};
+use echo_chain as chain;
+use echo_core as core;
+use echo_core::core::hash::Hashed;
+use echo_core::core::Transaction;
+use echo_core::global;
+use echo_keychain::ExtKeychain;
+use echo_util::secp::key::SecretKey;
+use echo_util::Mutex;
 use echo_wallet_controller::controller::owner_single_use as owner;
 use echo_wallet_impls::test_framework::*;
 use echo_wallet_impls::{DefaultLCProvider, PathToSlate, SlatePutter};
 use echo_wallet_libwallet as libwallet;
 use echo_wallet_libwallet::api_impl::types::InitTxArgs;
 use echo_wallet_libwallet::WalletInst;
-use grin_chain as chain;
-use grin_core as core;
-use grin_core::core::hash::Hashed;
-use grin_core::core::Transaction;
-use grin_core::global;
-use grin_keychain::ExtKeychain;
-use grin_util::secp::key::SecretKey;
-use grin_util::Mutex;
 use log::error;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;

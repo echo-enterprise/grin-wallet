@@ -101,7 +101,7 @@ mod tests {
 	use super::*;
 	use std::fs;
 
-	use grin_core::global;
+	use echo_core::global;
 
 	fn clean_output_dir(test_dir: &str) {
 		let _ = remove_dir_all::remove_dir_all(test_dir);

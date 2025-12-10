@@ -15,9 +15,9 @@
 //! Functions defining wallet 'addresses', i.e. ed2559 keys based on
 //! a derivation path
 
-use crate::grin_util::secp::key::SecretKey;
+use crate::echo_util::secp::key::SecretKey;
 use crate::Error;
-use grin_keychain::{ChildNumber, Identifier, Keychain, SwitchCommitmentType};
+use echo_keychain::{ChildNumber, Identifier, Keychain, SwitchCommitmentType};
 
 use crate::blake2::blake2b::blake2b;
 

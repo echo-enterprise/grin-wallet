@@ -18,24 +18,24 @@ use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use std::io::Cursor;
 use uuid::Uuid;
 
-use crate::grin_core::consensus::valid_header_version;
-use crate::grin_core::core::HeaderVersion;
-use crate::grin_keychain::{Identifier, Keychain};
-use crate::grin_util::secp::key::SecretKey;
-use crate::grin_util::secp::pedersen;
-use crate::grin_util::Mutex;
+use crate::echo_core::consensus::valid_header_version;
+use crate::echo_core::core::HeaderVersion;
+use crate::echo_keychain::{Identifier, Keychain};
+use crate::echo_util::secp::key::SecretKey;
+use crate::echo_util::secp::pedersen;
+use crate::echo_util::Mutex;
 use crate::internal::{selection, updater};
 use crate::slate::Slate;
 use crate::types::{Context, NodeClient, StoredProofInfo, TxLogEntryType, WalletBackend};
 use crate::util::OnionV3Address;
 use crate::InitTxArgs;
 use crate::{address, Error};
+use echo_core::core::FeeFields;
 use ed25519_dalek::Keypair as DalekKeypair;
 use ed25519_dalek::PublicKey as DalekPublicKey;
 use ed25519_dalek::SecretKey as DalekSecretKey;
 use ed25519_dalek::Signature as DalekSignature;
 use ed25519_dalek::{Signer, Verifier};
-use grin_core::core::FeeFields;
 
 // static for incrementing test UUIDs
 lazy_static! {
@@ -598,12 +598,12 @@ mod test {
 	use super::*;
 	use rand::rngs::mock::StepRng;
 
-	use crate::grin_core::core::{FeeFields, KernelFeatures};
-	use crate::grin_core::libtx::{build, ProofBuilder};
-	use crate::grin_keychain::{
+	use crate::echo_core::core::{FeeFields, KernelFeatures};
+	use crate::echo_core::libtx::{build, ProofBuilder};
+	use crate::echo_keychain::{
 		BlindSum, BlindingFactor, ExtKeychain, ExtKeychainPath, Keychain, SwitchCommitmentType,
 	};
-	use crate::grin_util::{secp, static_secp_instance};
+	use crate::echo_util::{secp, static_secp_instance};
 
 	#[test]
 	// demonstrate that input.commitment == referenced output.commitment

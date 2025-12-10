@@ -42,38 +42,21 @@ echo_wallet_libwallet = { path = "../libwallet", version = "5.4.0-alpha.1" }
 
 ##### Grin Imports
 
-# For Release
-grin_core = "5.3.3"
-grin_keychain = "5.3.3"
-grin_chain = "5.3.3"
-grin_util = "5.3.3"
-grin_api = "5.3.3"
-grin_store = "5.3.3"
-
-# For beta release
-
-# grin_core = { git = "https://github.com/mimblewimble/grin", tag = "v5.2.0-beta.3"}
-# grin_keychain = { git = "https://github.com/mimblewimble/grin", tag = "v5.2.0-beta.3" }
-# grin_chain = { git = "https://github.com/mimblewimble/grin", tag = "v5.2.0-beta.3" }
-# grin_util = { git = "https://github.com/mimblewimble/grin", tag = "v5.2.0-beta.3" }
-# grin_api = { git = "https://github.com/mimblewimble/grin", tag = "v5.2.0-beta.3" }
-# grin_store = { git = "https://github.com/mimblewimble/grin", tag = "v5.2.0-beta.3" }
-
 # For bleeding edge
-# grin_core = { git = "https://github.com/mimblewimble/grin", branch = "master" }
-# grin_keychain = { git = "https://github.com/mimblewimble/grin", branch = "master" }
-# grin_chain = { git = "https://github.com/mimblewimble/grin", branch = "master" }
-# grin_util = { git = "https://github.com/mimblewimble/grin", branch = "master" }
-# grin_api = { git = "https://github.com/mimblewimble/grin", branch = "master" }
-# grin_store = { git = "https://github.com/mimblewimble/grin", branch = "master" }
+# echo_core = { git = "https://github.com/mimblewimble/grin", branch = "master" }
+# echo_keychain = { git = "https://github.com/mimblewimble/grin", branch = "master" }
+# echo_chain = { git = "https://github.com/mimblewimble/grin", branch = "master" }
+# echo_util = { git = "https://github.com/mimblewimble/grin", branch = "master" }
+# echo_api = { git = "https://github.com/mimblewimble/grin", branch = "master" }
+# echo_store = { git = "https://github.com/mimblewimble/grin", branch = "master" }
 
 # For local testing
-# grin_core = { path = "../../grin/core"}
-# grin_keychain = { path = "../../grin/keychain"}
-# grin_chain = { path = "../../grin/chain"}
-# grin_util = { path = "../../grin/util"}
-# grin_api = { path = "../../grin/api"}
-# grin_store = { path = "../../grin/store"}
+echo_core = { path = "../../echo/core"}
+echo_keychain = { path = "../../echo/keychain"}
+echo_chain = { path = "../../echo/chain"}
+echo_util = { path = "../../echo/util"}
+echo_api = { path = "../../echo/api"}
+echo_store = { path = "../../echo/store"}
 
 #####
 

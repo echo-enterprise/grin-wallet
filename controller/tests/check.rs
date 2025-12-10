@@ -17,8 +17,8 @@ extern crate log;
 extern crate echo_wallet_controller as wallet;
 extern crate echo_wallet_impls as impls;
 
-use grin_core as core;
-use grin_util as util;
+use echo_core as core;
+use echo_util as util;
 
 use self::core::consensus;
 use self::core::global;
@@ -377,7 +377,7 @@ fn two_wallets_one_seed_impl(test_dir: &'static str) -> Result<(), libwallet::Er
 
 	// Do some mining
 	let mut bh = 20u64;
-	let base_amount = consensus::GRIN_BASE;
+	let base_amount = core::consensus::ECHO_BASE;
 	let _ = test_framework::award_blocks_to_wallet(
 		&chain,
 		miner.clone(),

@@ -14,10 +14,10 @@
 
 //! Types specific to the wallet api, mostly argument serialization
 
-use crate::grin_core::core::Output;
-use crate::grin_core::libtx::secp_ser;
-use crate::grin_keychain::{BlindingFactor, Identifier};
-use crate::grin_util::secp::pedersen;
+use crate::echo_core::core::Output;
+use crate::echo_core::libtx::secp_ser;
+use crate::echo_keychain::{BlindingFactor, Identifier};
+use crate::echo_util::secp::pedersen;
 use crate::slate_versions::ser as dalek_ser;
 use crate::slate_versions::SlateVersion;
 use crate::types::OutputData;

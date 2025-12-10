@@ -19,7 +19,7 @@ use crate::config::TorConfig;
 use crate::keychain::Keychain;
 use crate::libwallet::{
 	address, Error, NodeClient, NodeVersionInfo, Slate, SlatepackAddress, WalletInst,
-	WalletLCProvider, GRIN_BLOCK_HEADER_VERSION,
+	WalletLCProvider, ECHO_BLOCK_HEADER_VERSION,
 };
 use crate::util::secp::key::SecretKey;
 use crate::util::{from_hex, static_secp_instance, to_base64, Mutex};
@@ -50,7 +50,7 @@ use easy_jsonrpc_mw;
 use easy_jsonrpc_mw::{Handler, MaybeReply};
 
 lazy_static! {
-	pub static ref GRIN_OWNER_BASIC_REALM: HeaderValue =
+	pub static ref echo_OWNER_BASIC_REALM: HeaderValue =
 		HeaderValue::from_str("Basic realm=GrinOwnerAPI").unwrap();
 }
 
@@ -68,7 +68,7 @@ fn check_middleware(
 				bhv = n.block_header_version;
 			}
 			if let Some(s) = slate {
-				if bhv > 4 && s.version_info.block_header_version < GRIN_BLOCK_HEADER_VERSION {
+				if bhv > 4 && s.version_info.block_header_version < ECHO_BLOCK_HEADER_VERSION {
 					Err(Error::Compatibility(
 						"Incoming Slate is not compatible with this wallet. \
 						 Please upgrade the node or use a different one."
@@ -230,7 +230,7 @@ where
 			"Basic ".to_string() + &to_base64(&("grin:".to_string() + &api_secret.unwrap()));
 		let basic_auth_middleware = Arc::new(BasicAuthMiddleware::new(
 			api_basic_auth,
-			&GRIN_OWNER_BASIC_REALM,
+			&echo_OWNER_BASIC_REALM,
 			Some("/v2/foreign".into()),
 		));
 		router.add_middleware(basic_auth_middleware);
@@ -670,6 +670,37 @@ where
 		let res = Self::call_api(req, key, mask, running_foreign, api).await?;
 		Ok(json_response_pretty(&res))
 	}
+
+	async fn convert_and_handle_post_request(
+		req: hyper::Request<hyper::Body>,
+		key: Arc<Mutex<Option<SecretKey>>>,
+		mask: Arc<Mutex<Option<SecretKey>>>,
+		running_foreign: bool,
+		api: Arc<Owner<L, C, K>>,
+	) -> Result<hyper::Response<hyper::Body>, Error>
+	where
+		hyper::Body: From<Vec<u8>>,
+	{
+		// Convert hyper 0.14 Body to hyper 0.13 Body by reading bytes and recreating
+		let (parts, body) = req.into_parts();
+		let body_bytes = hyper::body::to_bytes(body)
+			.await
+			.map_err(|_| Error::GenericError("Failed to read request body".to_string()))?;
+		let body_vec = body_bytes.to_vec();
+		let converted_req = Request::from_parts(parts, Body::from(body_vec));
+		let response =
+			Self::handle_post_request(converted_req, key, mask, running_foreign, api).await?;
+		// Convert hyper 0.13 Response to hyper 0.14 Response
+		let (parts, body) = response.into_parts();
+		let body_bytes = body::to_bytes(body)
+			.await
+			.map_err(|_| Error::GenericError("Failed to read response body".to_string()))?;
+		let body_vec = body_bytes.to_vec();
+		Ok(hyper::Response::from_parts(
+			parts,
+			hyper::Body::from(body_vec),
+		))
+	}
 }
 
 impl<L, C, K> api::Handler for OwnerAPIHandlerV3<L, C, K>
@@ -678,25 +709,64 @@ where
 	C: NodeClient + 'static,
 	K: Keychain + 'static,
 {
-	fn post(&self, req: Request<Body>) -> ResponseFuture {
+	fn post(&self, req: hyper::Request<hyper::Body>) -> ResponseFuture {
 		let key = self.shared_key.clone();
 		let mask = self.keychain_mask.clone();
 		let running_foreign = self.running_foreign;
 		let api = self.owner_api.clone();
 
 		Box::pin(async move {
-			match Self::handle_post_request(req, key, mask, running_foreign, api).await {
+			match Self::convert_and_handle_post_request(req, key, mask, running_foreign, api).await
+			{
 				Ok(r) => Ok(r),
 				Err(e) => {
 					error!("Request Error: {:?}", e);
-					Ok(create_error_response(e))
+					let response = create_error_response(e);
+					let (parts, body) = response.into_parts();
+					let body_bytes = match body::to_bytes(body).await {
+						Ok(bytes) => bytes,
+						Err(e) => {
+							return Ok(hyper::Response::builder()
+								.status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
+								.body(hyper::Body::from(format!(
+									"Failed to read response body: {}",
+									e
+								)))
+								.unwrap())
+						}
+					};
+					let body_vec = body_bytes.to_vec();
+					Ok(hyper::Response::from_parts(
+						parts,
+						hyper::Body::from(body_vec),
+					))
 				}
 			}
 		})
 	}
 
-	fn options(&self, _req: Request<Body>) -> ResponseFuture {
-		Box::pin(async { Ok(create_ok_response("{}")) })
+	fn options(&self, _req: hyper::Request<hyper::Body>) -> ResponseFuture {
+		Box::pin(async {
+			let response = create_ok_response("{}");
+			let (parts, body) = response.into_parts();
+			let body_bytes = match body::to_bytes(body).await {
+				Ok(bytes) => bytes,
+				Err(e) => {
+					return Ok(hyper::Response::builder()
+						.status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
+						.body(hyper::Body::from(format!(
+							"Failed to read response body: {}",
+							e
+						)))
+						.unwrap())
+				}
+			};
+			let body_vec = body_bytes.to_vec();
+			Ok(hyper::Response::from_parts(
+				parts,
+				hyper::Body::from(body_vec),
+			))
+		})
 	}
 }
 /// V2 API Handler/Wrapper for foreign functions
@@ -764,6 +834,37 @@ where
 		let res = Self::call_api(req, api).await?;
 		Ok(json_response_pretty(&res))
 	}
+
+	async fn convert_and_handle_post_request(
+		req: hyper::Request<hyper::Body>,
+		mask: Option<SecretKey>,
+		wallet: Arc<Mutex<Box<dyn WalletInst<'static, L, C, K> + 'static>>>,
+		test_mode: bool,
+		tor_config: Option<TorConfig>,
+	) -> Result<hyper::Response<hyper::Body>, Error>
+	where
+		hyper::Body: From<Vec<u8>>,
+	{
+		// Convert hyper 0.14 Body to hyper 0.13 Body by reading bytes and recreating
+		let (parts, body) = req.into_parts();
+		let body_bytes = hyper::body::to_bytes(body)
+			.await
+			.map_err(|_| Error::GenericError("Failed to read request body".to_string()))?;
+		let body_vec = body_bytes.to_vec();
+		let converted_req = Request::from_parts(parts, Body::from(body_vec));
+		let response =
+			Self::handle_post_request(converted_req, mask, wallet, test_mode, tor_config).await?;
+		// Convert hyper 0.13 Response to hyper 0.14 Response
+		let (parts, body) = response.into_parts();
+		let body_bytes = body::to_bytes(body)
+			.await
+			.map_err(|_| Error::GenericError("Failed to read response body".to_string()))?;
+		let body_vec = body_bytes.to_vec();
+		Ok(hyper::Response::from_parts(
+			parts,
+			hyper::Body::from(body_vec),
+		))
+	}
 }
 
 impl<L, C, K> api::Handler for ForeignAPIHandlerV2<L, C, K>
@@ -772,25 +873,65 @@ where
 	C: NodeClient + 'static,
 	K: Keychain + 'static,
 {
-	fn post(&self, req: Request<Body>) -> ResponseFuture {
+	fn post(&self, req: hyper::Request<hyper::Body>) -> ResponseFuture {
 		let mask = self.keychain_mask.lock().clone();
 		let wallet = self.wallet.clone();
 		let test_mode = self.test_mode;
 		let tor_config = self.tor_config.lock().clone();
 
 		Box::pin(async move {
-			match Self::handle_post_request(req, mask, wallet, test_mode, tor_config).await {
+			match Self::convert_and_handle_post_request(req, mask, wallet, test_mode, tor_config)
+				.await
+			{
 				Ok(v) => Ok(v),
 				Err(e) => {
 					error!("Request Error: {:?}", e);
-					Ok(create_error_response(e))
+					let response = create_error_response(e);
+					let (parts, body) = response.into_parts();
+					let body_bytes = match body::to_bytes(body).await {
+						Ok(bytes) => bytes,
+						Err(e) => {
+							return Ok(hyper::Response::builder()
+								.status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
+								.body(hyper::Body::from(format!(
+									"Failed to read response body: {}",
+									e
+								)))
+								.unwrap())
+						}
+					};
+					let body_vec = body_bytes.to_vec();
+					Ok(hyper::Response::from_parts(
+						parts,
+						hyper::Body::from(body_vec),
+					))
 				}
 			}
 		})
 	}
 
-	fn options(&self, _req: Request<Body>) -> ResponseFuture {
-		Box::pin(async { Ok(create_ok_response("{}")) })
+	fn options(&self, _req: hyper::Request<hyper::Body>) -> ResponseFuture {
+		Box::pin(async {
+			let response = create_ok_response("{}");
+			let (parts, body) = response.into_parts();
+			let body_bytes = match body::to_bytes(body).await {
+				Ok(bytes) => bytes,
+				Err(e) => {
+					return Ok(hyper::Response::builder()
+						.status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
+						.body(hyper::Body::from(format!(
+							"Failed to read response body: {}",
+							e
+						)))
+						.unwrap())
+				}
+			};
+			let body_vec = body_bytes.to_vec();
+			Ok(hyper::Response::from_parts(
+				parts,
+				hyper::Body::from(body_vec),
+			))
+		})
 	}
 }
 

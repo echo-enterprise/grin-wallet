@@ -111,15 +111,15 @@ where
 	///
 	/// # Example
 	/// ```
-	/// use grin_keychain as keychain;
-	/// use grin_util as util;
-	/// use grin_core;
+	/// use echo_keychain as keychain;
+	/// use echo_util as util;
+	/// use echo_core;
 	/// use echo_wallet_api as api;
 	/// use echo_wallet_config as config;
 	/// use echo_wallet_impls as impls;
 	/// use echo_wallet_libwallet as libwallet;
 	///
-	/// use grin_core::global;
+	/// use echo_core::global;
 	/// use keychain::ExtKeychain;
 	/// use tempfile::tempdir;
 	///
@@ -272,7 +272,7 @@ where
 	///
 	/// # Returns
 	/// * Result Containing:
-	/// * A [Keychain Identifier](../grin_keychain/struct.Identifier.html) for the new path
+	/// * A [Keychain Identifier](../echo_keychain/struct.Identifier.html) for the new path
 	/// * or [`libwallet::Error`](../echo_wallet_libwallet/struct.Error.html) if an error is encountered.
 	///
 	/// # Remarks
@@ -1004,7 +1004,7 @@ where
 	/// # Arguments
 	/// * `keychain_mask` - Wallet secret mask to XOR against the stored wallet seed before using, if
 	/// being used.
-	/// * `tx` - A completed [`Transaction`](../grin_core/core/transaction/struct.Transaction.html),
+	/// * `tx` - A completed [`Transaction`](../echo_core/core/transaction/struct.Transaction.html),
 	/// typically the `tx` field in the transaction [`Slate`](../echo_wallet_libwallet/slate/struct.Slate.html).
 	/// * `fluff` - Instruct the node whether to use the Dandelion protocol when posting the
 	/// transaction. If `true`, the node should skip the Dandelion phase and broadcast the
@@ -1512,7 +1512,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// let dir = "path/to/wallet/dir";
 	///
@@ -1579,7 +1579,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// // note that the WalletInst struct does not necessarily need to contain an
 	/// // instantiated wallet
@@ -1647,7 +1647,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// // note that the WalletInst struct does not necessarily need to contain an
 	/// // instantiated wallet
@@ -1713,7 +1713,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// // Set up as above
 	/// # let api_owner = Owner::new(wallet.clone(), None);
@@ -1749,7 +1749,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// // Set up as above
 	/// # let api_owner = Owner::new(wallet.clone(), None);
@@ -1794,7 +1794,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// // Set up as above
 	/// # let api_owner = Owner::new(wallet.clone(), None);
@@ -1837,7 +1837,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// // Set up as above
 	/// # let api_owner = Owner::new(wallet.clone(), None);
@@ -1891,7 +1891,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -1946,7 +1946,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -1988,7 +1988,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -2054,7 +2054,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -2094,7 +2094,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -2135,7 +2135,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -2205,7 +2205,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -2255,7 +2255,7 @@ where
 	/// ```
 	/// # echo_wallet_api::doctest_helper_setup_doc_env!(wallet, wallet_config);
 	///
-	/// use grin_core::global::ChainTypes;
+	/// use echo_core::global::ChainTypes;
 	///
 	/// use std::time::Duration;
 	///
@@ -2579,18 +2579,18 @@ pub fn try_slatepack_sync_workflow(
 #[macro_export]
 macro_rules! doctest_helper_setup_doc_env {
 	($wallet:ident, $wallet_config:ident) => {
+		use echo_core::{self, global};
+		use echo_keychain as keychain;
+		use echo_util as util;
 		use echo_wallet_api as api;
 		use echo_wallet_config as config;
 		use echo_wallet_impls as impls;
 		use echo_wallet_libwallet as libwallet;
-		use grin_core::{self, global};
-		use grin_keychain as keychain;
-		use grin_util as util;
 
 		use keychain::ExtKeychain;
 		use tempfile::tempdir;
 
-		use grin_util::secp::pedersen::Commitment;
+		use echo_util::secp::pedersen::Commitment;
 		use std::sync::Arc;
 		use util::{Mutex, ZeroingString};
 

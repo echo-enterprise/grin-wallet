@@ -20,7 +20,7 @@ use sha2::{Digest, Sha512};
 use x25519_dalek::StaticSecret;
 
 use crate::dalek_ser;
-use crate::grin_core::ser::{self, Readable, Reader, Writeable, Writer};
+use crate::echo_core::ser::{self, Readable, Reader, Writeable, Writer};
 use crate::Error;
 use echo_wallet_util::byte_ser;
 
@@ -650,7 +650,7 @@ fn slatepack_bin_basic_ser() -> Result<(), echo_wallet_util::byte_ser::Error> {
 
 #[test]
 fn slatepack_bin_opt_fields_ser() -> Result<(), echo_wallet_util::byte_ser::Error> {
-	use crate::grin_core::global;
+	use crate::echo_core::global;
 	use echo_wallet_util::byte_ser;
 	global::set_local_chain_type(global::ChainTypes::AutomatedTesting);
 	let mut payload: Vec<u8> = Vec::with_capacity(243);
@@ -675,7 +675,7 @@ fn slatepack_bin_opt_fields_ser() -> Result<(), echo_wallet_util::byte_ser::Erro
 // ensure that a slatepack with unknown data in the optional fields can be read
 #[test]
 fn slatepack_bin_future() -> Result<(), echo_wallet_util::byte_ser::Error> {
-	use crate::grin_core::global;
+	use crate::echo_core::global;
 	use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 	use echo_wallet_util::byte_ser;
 	use rand::{thread_rng, Rng};
@@ -753,7 +753,7 @@ fn slatepack_bin_future() -> Result<(), echo_wallet_util::byte_ser::Error> {
 // if mode == 1
 #[test]
 fn slatepack_encrypted_meta() -> Result<(), Error> {
-	use crate::grin_core::global;
+	use crate::echo_core::global;
 	use crate::{Slate, SlateVersion, VersionedBinSlate, VersionedSlate};
 	use ed25519_dalek::PublicKey as edDalekPublicKey;
 	use ed25519_dalek::SecretKey as edDalekSecretKey;
@@ -802,7 +802,7 @@ fn slatepack_encrypted_meta() -> Result<(), Error> {
 // metadata won't break parsing
 #[test]
 fn slatepack_encrypted_meta_future() -> Result<(), Error> {
-	use crate::grin_core::global;
+	use crate::echo_core::global;
 	use crate::{Slate, SlateVersion, VersionedBinSlate, VersionedSlate};
 	use ed25519_dalek::PublicKey as edDalekPublicKey;
 	use ed25519_dalek::SecretKey as edDalekSecretKey;

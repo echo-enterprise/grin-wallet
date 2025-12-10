@@ -2450,7 +2450,7 @@ where
 		for key in server_keys {
 			keys.push(SecretKey::from_slice(
 				&secp,
-				&grin_util::from_hex(&key).map_err(|e| Error::ServerKeyDeser(e))?,
+				&echo_util::from_hex(&key).map_err(|e| Error::ServerKeyDeser(e))?,
 			)?)
 		}
 
@@ -2482,13 +2482,13 @@ pub fn run_doctest_owner(
 	payment_proof: bool,
 ) -> Result<Option<serde_json::Value>, String> {
 	use easy_jsonrpc_mw::Handler;
+	use echo_keychain::ExtKeychain;
 	use echo_wallet_impls::test_framework::{self, LocalWalletClient, WalletProxy};
 	use echo_wallet_impls::{DefaultLCProvider, DefaultWalletImpl};
 	use echo_wallet_libwallet::{api_impl, WalletInst};
-	use grin_keychain::ExtKeychain;
 
 	use crate::core::global::ChainTypes;
-	use grin_util as util;
+	use echo_util as util;
 
 	use std::{fs, thread};
 

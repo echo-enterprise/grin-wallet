@@ -345,14 +345,14 @@ pub fn run_doctest_foreign(
 	init_invoice_tx: bool,
 ) -> Result<Option<serde_json::Value>, String> {
 	use easy_jsonrpc_mw::Handler;
+	use echo_keychain::ExtKeychain;
 	use echo_wallet_impls::test_framework::{self, LocalWalletClient, WalletProxy};
 	use echo_wallet_impls::{DefaultLCProvider, DefaultWalletImpl};
 	use echo_wallet_libwallet::{api_impl, WalletInst};
-	use grin_keychain::ExtKeychain;
 
 	use crate::core::global;
 	use crate::core::global::ChainTypes;
-	use grin_util as util;
+	use echo_util as util;
 
 	use std::sync::Arc;
 	use util::Mutex;

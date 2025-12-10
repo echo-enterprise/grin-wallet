@@ -16,9 +16,9 @@ extern crate lazy_static;
 #[macro_use]
 extern crate clap;
 
+use echo_api as api;
+use echo_util as util;
 use echo_wallet_config as config;
-use grin_api as api;
-use grin_util as util;
 
 mod cli;
 pub mod cmd;

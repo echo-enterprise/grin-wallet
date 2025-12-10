@@ -15,16 +15,16 @@
 //! Selection of inputs for building transactions
 
 use crate::address;
-use crate::error::Error;
-use crate::grin_core::core::amount_to_hr_string;
-use crate::grin_core::libtx::{
+use crate::echo_core::core::amount_to_hr_string;
+use crate::echo_core::libtx::{
 	build,
 	proof::{ProofBuild, ProofBuilder},
 	tx_fee,
 };
-use crate::grin_keychain::{Identifier, Keychain};
-use crate::grin_util::secp::key::SecretKey;
-use crate::grin_util::secp::pedersen;
+use crate::echo_keychain::{Identifier, Keychain};
+use crate::echo_util::secp::key::SecretKey;
+use crate::echo_util::secp::pedersen;
+use crate::error::Error;
 use crate::internal::keys;
 use crate::slate::Slate;
 use crate::types::*;

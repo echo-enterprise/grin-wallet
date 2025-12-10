@@ -18,17 +18,17 @@
 use std::collections::{HashMap, HashSet};
 use uuid::Uuid;
 
+use crate::echo_core::consensus::reward;
+use crate::echo_core::core::{Output, TxKernel};
+use crate::echo_core::global;
+use crate::echo_core::libtx::proof::ProofBuilder;
+use crate::echo_core::libtx::reward;
+use crate::echo_keychain::{Identifier, Keychain, SwitchCommitmentType};
+use crate::echo_util as util;
+use crate::echo_util::secp::key::SecretKey;
+use crate::echo_util::secp::pedersen;
+use crate::echo_util::static_secp_instance;
 use crate::error::Error;
-use crate::grin_core::consensus::reward;
-use crate::grin_core::core::{Output, TxKernel};
-use crate::grin_core::global;
-use crate::grin_core::libtx::proof::ProofBuilder;
-use crate::grin_core::libtx::reward;
-use crate::grin_keychain::{Identifier, Keychain, SwitchCommitmentType};
-use crate::grin_util as util;
-use crate::grin_util::secp::key::SecretKey;
-use crate::grin_util::secp::pedersen;
-use crate::grin_util::static_secp_instance;
 use crate::internal::keys;
 use crate::types::{
 	NodeClient, OutputData, OutputStatus, TxLogEntry, TxLogEntryType, WalletBackend, WalletInfo,

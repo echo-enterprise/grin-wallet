@@ -24,9 +24,9 @@
 
 use echo_wallet_config as config;
 
-use grin_core;
-use grin_keychain;
-use grin_util;
+use echo_core;
+use echo_keychain;
+use echo_util;
 
 use echo_wallet_util as util;
 
@@ -58,7 +58,7 @@ pub use crate::slate::{ParticipantData, Slate, SlateState};
 pub use crate::slate_versions::v4::sig_is_blank;
 pub use crate::slate_versions::{
 	SlateVersion, VersionedBinSlate, VersionedCoinbase, VersionedSlate, CURRENT_SLATE_VERSION,
-	GRIN_BLOCK_HEADER_VERSION,
+	ECHO_BLOCK_HEADER_VERSION,
 };
 pub use crate::slatepack::{
 	Slatepack, SlatepackAddress, SlatepackArmor, SlatepackBin, Slatepacker, SlatepackerArgs,

@@ -16,9 +16,9 @@
 use strum::IntoEnumIterator;
 
 use crate::api_impl::owner::{check_ttl, post_tx};
-use crate::grin_core::core::FeeFields;
-use crate::grin_keychain::Keychain;
-use crate::grin_util::secp::key::SecretKey;
+use crate::echo_core::core::FeeFields;
+use crate::echo_keychain::Keychain;
+use crate::echo_util::secp::key::SecretKey;
 use crate::internal::{selection, tx, updater};
 use crate::slate_versions::SlateVersion;
 use crate::{

@@ -15,7 +15,7 @@
 //! Util fns for mwixnet
 //! TODO: possibly redundant, check or move elsewhere
 
-use grin_core::ser::{self, Readable, Reader, Writeable, Writer};
+use echo_core::ser::{self, Readable, Reader, Writeable, Writer};
 use std::convert::TryInto;
 
 /// Writes an optional value as '1' + value if Some, or '0' if None
@@ -76,7 +76,7 @@ pub fn write_optional<O: Writeable, W: Writer>(
 ///
 /// ```
 ///	use echo_wallet_libwallet::mwixnet::onion_util::read_optional;
-/// use grin_core::ser::{BinReader, ProtocolVersion, DeserializationMode};
+/// use echo_core::ser::{BinReader, ProtocolVersion, DeserializationMode};
 /// let mut buf: &[u8] = &[1, 0, 0, 0, 10];
 /// let mut reader = BinReader::new(&mut buf, ProtocolVersion::local(), DeserializationMode::default());
 /// let optional_value: Option<u32> = read_optional(&mut reader).unwrap();
@@ -122,7 +122,7 @@ pub fn vec_to_array<const S: usize>(vec: &Vec<u8>) -> Result<[u8; S], ser::Error
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use grin_core::ser::{BinReader, BinWriter, DeserializationMode, ProtocolVersion};
+	use echo_core::ser::{BinReader, BinWriter, DeserializationMode, ProtocolVersion};
 
 	#[test]
 	fn test_write_optional() {

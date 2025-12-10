@@ -14,9 +14,9 @@
 //! Common functions for wallet integration tests
 extern crate echo_wallet;
 
+use echo_util as util;
 use echo_wallet_config as config;
 use echo_wallet_impls::test_framework::LocalWalletClient;
-use grin_util as util;
 
 use clap::{App, ArgMatches};
 use std::path::PathBuf;
@@ -24,17 +24,17 @@ use std::sync::Arc;
 use std::{env, fs};
 use util::{Mutex, ZeroingString};
 
+use echo_core::global::{self, ChainTypes};
+use echo_keychain::ExtKeychain;
+use echo_util::{from_hex, static_secp_instance};
 use echo_wallet_api::{EncryptedRequest, EncryptedResponse, JsonId};
 use echo_wallet_config::{GlobalWalletConfig, WalletConfig, ECHO_WALLET_DIR};
 use echo_wallet_impls::{DefaultLCProvider, DefaultWalletImpl};
 use echo_wallet_libwallet::{NodeClient, WalletInfo, WalletInst};
-use grin_core::global::{self, ChainTypes};
-use grin_keychain::ExtKeychain;
-use grin_util::{from_hex, static_secp_instance};
 use util::secp::key::{PublicKey, SecretKey};
 
+use echo_api as api;
 use echo_wallet::cmd::wallet_args;
-use grin_api as api;
 
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};

@@ -12,15 +12,15 @@
 // limitations under the License.
 
 //! core::libtx specific tests
-use echo_wallet_libwallet::Context;
-use grin_core::core::transaction;
-use grin_core::core::FeeFields;
-use grin_core::libtx::{aggsig, proof};
-use grin_keychain::{
+use echo_core::core::transaction;
+use echo_core::core::FeeFields;
+use echo_core::libtx::{aggsig, proof};
+use echo_keychain::{
 	BlindSum, BlindingFactor, ExtKeychain, ExtKeychainPath, Keychain, SwitchCommitmentType,
 };
-use grin_util::secp;
-use grin_util::secp::key::{PublicKey, SecretKey};
+use echo_util::secp;
+use echo_util::secp::key::{PublicKey, SecretKey};
+use echo_wallet_libwallet::Context;
 use rand::thread_rng;
 
 fn kernel_sig_msg() -> secp::Message {

@@ -225,12 +225,12 @@ impl NodeClient for HTTPNodeClient {
 		// parallelizing larger requests. Will raise default
 		// from 200 to 500, however
 		let chunk_default = 500;
-		let chunk_size = match env::var("GRIN_OUTPUT_QUERY_SIZE") {
+		let chunk_size = match env::var("echo_OUTPUT_QUERY_SIZE") {
 			Ok(s) => match s.parse::<usize>() {
 				Ok(c) => c,
 				Err(e) => {
 					error!(
-						"Unable to parse GRIN_OUTPUT_QUERY_SIZE, defaulting to {}",
+						"Unable to parse echo_OUTPUT_QUERY_SIZE, defaulting to {}",
 						chunk_default
 					);
 					error!("Reason: {}", e);

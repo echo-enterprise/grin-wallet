@@ -53,14 +53,14 @@
 //! *  The `receiver_signature` field is renamed to `rsig`
 //! * `rsig` may be omitted if it has not yet been filled out
 
-use crate::grin_core::core::FeeFields;
-use crate::grin_core::core::{Input, Output, TxKernel};
-use crate::grin_core::libtx::secp_ser;
-use crate::grin_keychain::{BlindingFactor, Identifier};
-use crate::grin_util::secp;
-use crate::grin_util::secp::key::PublicKey;
-use crate::grin_util::secp::pedersen::{Commitment, RangeProof};
-use crate::grin_util::secp::Signature;
+use crate::echo_core::core::FeeFields;
+use crate::echo_core::core::{Input, Output, TxKernel};
+use crate::echo_core::libtx::secp_ser;
+use crate::echo_keychain::{BlindingFactor, Identifier};
+use crate::echo_util::secp;
+use crate::echo_util::secp::key::PublicKey;
+use crate::echo_util::secp::pedersen::{Commitment, RangeProof};
+use crate::echo_util::secp::Signature;
 use crate::{slate_versions::ser, CbData};
 use ed25519_dalek::PublicKey as DalekPublicKey;
 use ed25519_dalek::Signature as DalekSignature;

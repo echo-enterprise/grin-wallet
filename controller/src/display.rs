@@ -42,9 +42,9 @@ pub fn outputs(
 		return Ok(());
 	}
 	let mut t = term::stdout().unwrap();
-	t.fg(term::color::MAGENTA).unwrap();
+	let _ = t.fg(term::color::MAGENTA);
 	writeln!(t, "{}", title).unwrap();
-	t.reset().unwrap();
+	let _ = t.reset();
 
 	let mut table = table!();
 
@@ -143,9 +143,9 @@ pub fn txs(
 		return Ok(());
 	}
 	let mut t = term::stdout().unwrap();
-	t.fg(term::color::MAGENTA).unwrap();
+	let _ = t.fg(term::color::MAGENTA);
 	writeln!(t, "{}", title).unwrap();
-	t.reset().unwrap();
+	let _ = t.reset();
 
 	let mut table = table!();
 
@@ -327,9 +327,9 @@ pub fn view_wallet_output(
 	}
 
 	let mut t = term::stdout().unwrap();
-	t.fg(term::color::MAGENTA).unwrap();
+	let _ = t.fg(term::color::MAGENTA);
 	writeln!(t, "{}", title).unwrap();
-	t.reset().unwrap();
+	let _ = t.reset();
 
 	let mut table = table!();
 
@@ -553,9 +553,9 @@ pub fn payment_proof(tx: &TxLogEntry) -> Result<(), Error> {
 		return Ok(());
 	}
 	let mut t = term::stdout().unwrap();
-	t.fg(term::color::MAGENTA).unwrap();
+	let _ = t.fg(term::color::MAGENTA);
 	writeln!(t, "{}", title).unwrap();
-	t.reset().unwrap();
+	let _ = t.reset();
 
 	let pp = match &tx.payment_proof {
 		None => {

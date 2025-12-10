@@ -26,10 +26,10 @@ use clap::App;
 use std::thread;
 use std::time::Duration;
 
+use echo_keychain::ExtKeychain;
+use echo_util::secp::key::SecretKey;
+use echo_util::{from_hex, static_secp_instance};
 use echo_wallet_impls::DefaultLCProvider;
-use grin_keychain::ExtKeychain;
-use grin_util::secp::key::SecretKey;
-use grin_util::{from_hex, static_secp_instance};
 use serde_json;
 
 #[macro_use]

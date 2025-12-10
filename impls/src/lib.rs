@@ -24,13 +24,13 @@ extern crate serde_derive;
 extern crate log;
 #[macro_use]
 extern crate serde_json;
+use echo_api as api;
+use echo_chain as chain;
+use echo_core as core;
+use echo_keychain as keychain;
+use echo_store as store;
+use echo_util as util;
 use echo_wallet_libwallet as libwallet;
-use grin_api as api;
-use grin_chain as chain;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_store as store;
-use grin_util as util;
 
 use echo_wallet_config as config;
 
