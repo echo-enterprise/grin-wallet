@@ -157,16 +157,9 @@ fn real_main() -> i32 {
 	global::init_global_accept_fee_base(config.members.as_ref().unwrap().wallet.accept_fee_base());
 
 	let wallet_config = config.clone().members.unwrap().wallet;
-	// let node_client = HTTPNodeClient::new(&wallet_config.check_node_api_http_addr, None).unwrap();
-	let node_client = HTTPNodeClient::new_proxy(
-		&wallet_config.check_node_api_http_addr,
-		None,
-		Some((
-			SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 4404),
-			"http://",
-		)),
-	)
-	.unwrap();
+	// Use direct connection by default. Proxy can be enabled via environment variable or config if needed.
+	// The proxy at 127.0.0.1:4404 is for I2P routing and should only be used when I2P router is running.
+	let node_client = HTTPNodeClient::new(&wallet_config.check_node_api_http_addr, None).unwrap();
 
 	cmd::wallet_command(&args, config, node_client)
 }

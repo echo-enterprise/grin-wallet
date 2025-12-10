@@ -210,7 +210,7 @@ impl Client {
 	) -> Result<RequestBuilder, Error> {
 		let mut builder = self.client.request(method, url);
 		if let Some(api_secret) = api_secret {
-			let basic_auth = format!("Basic {}", to_base64(&format!("grin:{}", api_secret)));
+			let basic_auth = format!("Basic {}", to_base64(&format!("echo:{}", api_secret)));
 			builder = builder.header(AUTHORIZATION, basic_auth);
 		}
 

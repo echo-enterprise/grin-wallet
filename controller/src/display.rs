@@ -116,9 +116,9 @@ pub fn outputs(
 
 	if !validated {
 		println!(
-			"\nWARNING: Wallet failed to verify data. \
-			 The above is from local cache and possibly invalid! \
-			 (is your `grin server` offline or broken?)"
+			"\nWARNING: Wallet failed to verify data against a live chain. \
+			 The above is from local cache and only valid up to the given height! \
+			 (is your `echo server` offline or broken? Check that the API is accessible at the configured address.)"
 		);
 	}
 	Ok(())
@@ -282,9 +282,9 @@ pub fn txs(
 
 	if !validated && include_status {
 		println!(
-			"\nWARNING: Wallet failed to verify data. \
-			 The above is from local cache and possibly invalid! \
-			 (is your `grin server` offline or broken?)"
+			"\nWARNING: Wallet failed to verify data against a live chain. \
+			 The above is from local cache and only valid up to the given height! \
+			 (is your `echo server` offline or broken? Check that the API is accessible at the configured address.)"
 		);
 	}
 	Ok(())
@@ -476,8 +476,8 @@ pub fn info(
 	if !validated {
 		println!(
 			"\nWARNING: Wallet failed to verify data against a live chain. \
-			 The above is from local cache and only valid up to the given height! \
-			 (is your `grin server` offline or broken?)"
+			 The above is from local cache and only valid up to the given height! \
+			 (is your `echo server` offline or broken? Check that the API is accessible at the configured address.)"
 		);
 	}
 }

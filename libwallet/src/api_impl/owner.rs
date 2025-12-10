@@ -1096,7 +1096,8 @@ where
 	// if we can't get the tip, don't continue
 	let tip = match res {
 		Ok(t) => t,
-		Err(_) => {
+		Err(e) => {
+			error!("Failed to get chain tip from node: {}", e);
 			if let Some(ref s) = status_send_channel {
 				let _ = s.send(StatusMessage::UpdateWarning(
 					"Updater Thread unable to contact node".to_owned(),
@@ -1275,6 +1276,8 @@ where
 			if let Error::InvalidKeychainMask = e {
 				return Err(e);
 			}
+			// Log the actual error for debugging
+			error!("Failed to refresh wallet outputs from node: {}", e);
 			Ok(false)
 		}
 	}
@@ -1303,7 +1306,10 @@ where
 
 	let height = match client.get_chain_tip() {
 		Ok(h) => h.0,
-		Err(_) => return Ok(false),
+		Err(e) => {
+			error!("Failed to get chain tip from node: {}", e);
+			return Ok(false);
+		}
 	};
 
 	for tx in txs.iter_mut() {
@@ -1317,7 +1323,10 @@ where
 			let res = client.get_kernel(&e, tx.kernel_lookup_min_height, Some(height));
 			let kernel = match res {
 				Ok(k) => k,
-				Err(_) => return Ok(false),
+				Err(e) => {
+					error!("Failed to get kernel from node: {}", e);
+					return Ok(false);
+				}
 			};
 			if let Some(k) = kernel {
 				debug!("Kernel Retrieved: {:?}", k);
